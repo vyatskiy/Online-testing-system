@@ -9,7 +9,17 @@ def hello():
 
 @app.route('/developer/')
 def developer():
-    print ('I got clicked!')
+    print ('I got clicked1!')
+    return render_template('index.html')
+
+@app.route('/tester/')
+def tester():
+    print ('I got clicked2!')
+    return render_template('index.html')
+
+@app.route('/analite/')
+def analite():
+    print ('I got clicked3!')
     return render_template('index.html')
 
 if __name__ == "__main__":
