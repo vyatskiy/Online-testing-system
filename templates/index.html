@@ -1,11 +1,61 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Online testing system</title>
-  </head>
+<html>
+<head background-color: salmon;>
+<title>Online testing system</title>
+<style>
+body {
+   	background: #457e98;
+	  color: rgb(0, 0, 0);
+   }
+.alert1 {
+  background: rgb(179, 190, 255);
+  margin-top: 2%;
+  padding: -1rem;
+  color: rgb(5, 5, 5);
+}
+.alert2 {
+  background: rgb(179, 190, 255);
+  padding: 1rem;
+  border-radius: 10px;
+  color: rgb(11, 0, 74);
+  font-family: serif;
+}
+.button1 {
+  display: inline-block;
+  color: rgb(248, 255, 253);
+  font-weight: 700;
+  text-decoration: none;
+  user-select: none;
+  margin-top: 2%;
+  margin-right: 2%;
+  padding: .5em 2em;
+  outline: none;
+  border: 2px solid;
+  border-radius: 1px;
+  transition: 0.2s;
+} 
+a.button1:hover { background: rgba(255,255,255,.2); }
+a.button1:active { background: white; }
+</style>
+</head>
 
-  <body class="text-center">
-  </body>
+<body>
+<p><h1 align="center">Тестирование сотрудника</h1></p>
+<div class="alert2">
+    <h2>Заполните анкету для тестирования</h2>    
+    <span class="input__box"> 
+      <div class="col-sm-2 col-xs-2"> Имя:  </div><input class = "input__name"></input>
+    </span> 
+    <span class="input__box"> 
+      <div class="col-sm-2 col-xs-2"> Фамилия:  </div><input class = "input__name"></input>
+    </span>     
+<div class="alert1">   
+    <span class="input__box"> 
+      <div class="col-sm-2 col-xs-2"> На какую должность хотели бы пройти тестирование:</div>
+    </span>   
+    <a href="/developer/" class="button1">Разработчик</a>
+    <a href="#" class="button1">Тестировщик</a>
+    <a href="#" class="button1">Аналитик</a>    
+</div>
+</div>
+</body>
 </html>
