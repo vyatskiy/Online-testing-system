@@ -50,7 +50,23 @@ body {
   transition: 0.2s;
 } 
 a.button1:hover { background: rgba(255,255,255,.2); }
-a.button1:active { background: white; }
+a.button1:active { background: rgb(115, 137, 108); }
+
+.button2 {
+  display: inline-block;
+  color: rgb(76, 98, 92);
+  font-weight: 600;
+  text-decoration: none;
+  user-select: none;
+  margin-right: 15%;
+  padding: .5em 2em;
+  outline: none;
+  border: 2px solid;
+  border-radius: 1px;
+  transition: 0.2s;
+} 
+a.button2:hover { background: rgba(255,255,255,.2); }
+a.button2:active { background: rgb(130, 238, 94); }
 
 .input__name {
   color: #050129;
@@ -75,7 +91,7 @@ a.button1:active { background: white; }
 <div class="alert2">
     <h2 align="center"> Заполните анкету для тестирования</h2>    
     <span class="input__box"> 
-      <div class="col-sm-2 col-xs-2"> Имя:  </div><input class = "input__name"></input>
+      <div class="col-sm-2 col-xs-2" > Имя:  </div><input class = "input__name"></input>
     </span> 
     <span class="input__box"> 
       <div class="textfield"> Фамилия:  </div><input class = "input__name"></input>
@@ -85,8 +101,9 @@ a.button1:active { background: white; }
     </span>         
     <span class="input__box"> 
       <div class="textfield"> Возраст:  </div><input class = "input__year"></input>
+      <button name="save" class="button2 type="submit">Сохранить</button>
     </span>    
-  </div>         
+  </div>        
 <div class="alert1">   
     <span class="input__box"> 
       <div class="text1"><b> На какую должность хотели бы пройти тестирование:</b></div>
