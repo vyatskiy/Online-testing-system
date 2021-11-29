@@ -1,8 +1,8 @@
-drop if exists users
-drop if exists answers
+drop table if exists answers;
+drop table if exists users;
 
 create table if not exists users (
-id_user int primary key,
+id_user serial primary key,
 first_name varchar(20) not null,
 second_name varchar(20) not null,
 city varchar(20) not null,
@@ -23,3 +23,6 @@ eighth_quest varchar(500),
 constraint fk1 foreign key(id_test)
 	references users(id_user) on delete cascade on update cascade
 );
+
+INSERT INTO users (first_name, second_name, city, age)
+VALUES ('vasya', 'pupkin', 'kazan', 1)

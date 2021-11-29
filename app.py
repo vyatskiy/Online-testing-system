@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, redirect
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
+import psycopg2
 
 app = Flask(__name__)
 
@@ -31,7 +32,27 @@ def save():
     first_name = request.form['firstname']
     second_name = request.form['secondname']  
     city = request.form['city']  
-    year = request.form['year']    
+    year = request.form['year']  
+
+    try:
+        conn = psycopg2.connect(dbname='d6hhit4rffokqg', user='jwibgjcvlajkpb', 
+                                password='e2f65328ae6f46ee34770897eb4ebf481f6c34d1d77848e8bb4edc902ce1e832',
+                                host='ec2-23-23-219-25.compute-1.amazonaws.com')
+    except:
+        print("I am unable to connect to the database") 
+
+    curs = conn.cursor()
+    curs.execute("INSERT INTO users (first_name, second_name, city, age) \
+        VALUES (" + first_name + ", " + second_name + ", " + city + ", " + year + ")")
+
+    curs.execute("select * from users")
+    records = curs.fetchall()
+    for row in records:
+        print(row)
+        
+    curs.close()
+    conn.close()
+
     return render_template('index.html')
 
 if __name__ == "__main__":
