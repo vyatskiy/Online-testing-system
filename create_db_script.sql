@@ -10,7 +10,7 @@ age int not null
 );
 
 create table if not exists answers (
-id_test int primary key,
+id_test serial primary key,
 type_test int not null check(type_test > 0 and type_test < 4),
 first_quest varchar(250) not null,
 second_quest varchar(250) not null,
