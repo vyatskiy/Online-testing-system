@@ -89,20 +89,26 @@ a.button2:active { background: rgb(130, 238, 94); }
 <body>
 <p><h1 class = "title" align="center">Тестирование сотрудника</h1></p>
 <div class="alert2">
-    <h2 align="center"> Заполните анкету для тестирования</h2>    
+    <h2 align="center"> Заполните анкету для тестирования</h2>   
+  <form action="/save" method="POST">
     <span class="input__box"> 
-      <div class="col-sm-2 col-xs-2" > Имя:  </div><input class = "input__name"></input>
+      <div class="col-sm-2 col-xs-2"> Имя:  </div>
+      <input class = "input__name" type = "text" name="firstname"></input>
     </span> 
     <span class="input__box"> 
-      <div class="textfield"> Фамилия:  </div><input class = "input__name"></input>
+      <div class="textfield"> Фамилия:  </div>
+      <input class = "input__name"  type = "text" name="secondname"></input>
     </span> 
     <span class="input__box"> 
-      <div class="textfield"> Город:  </div><input class = "input__name"></input>
+      <div class="textfield"> Город:  </div>
+      <input class = "input__name"  type = "text" name="city"></input>
     </span>         
     <span class="input__box"> 
-      <div class="textfield"> Возраст:  </div><input class = "input__year"></input>
-      <button name="save" class="button2 type="submit">Сохранить</button>
-    </span>    
+      <div class="textfield"> Возраст:  </div>
+      <input class = "input__year"  type = "text" name="year"></input>
+      <input type="submit" value="Сохранить">
+    </span>  
+  </form>  
   </div>        
 <div class="alert1">   
     <span class="input__box"> 

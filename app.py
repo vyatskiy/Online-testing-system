@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, request, render_template, redirect
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 
 app = Flask(__name__)
@@ -26,8 +26,12 @@ def analite():
     questions[1] = AnalitixQuestions.A2
     return render_template('analitix.html', questions = questions)
 
-@app.route('/save/', methods=['POST','GET'])
+@app.route('/save', methods=['POST','GET'])
 def save():
+    first_name = request.form['firstname']
+    second_name = request.form['secondname']  
+    city = request.form['city']  
+    year = request.form['year']    
     return render_template('index.html')
 
 if __name__ == "__main__":
