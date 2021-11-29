@@ -9,17 +9,17 @@ body {
 .alert1 {
   background: rgb(179, 190, 255);
   padding: 1rem;
-  margin-top: 7%;
+  margin-top: 5%;
   margin-left: 15%;
   margin-right: 17%;
   border-radius: 15px;
   color: rgb(11, 0, 74);
   font-family: serif;
-}
+}   
 .alert2 {
   background: rgb(179, 190, 255);
   padding: 1rem;
-  margin-top: 5%;
+  margin-top: 3%;
   margin-left: 15%;
   margin-right: 17%;
   border-radius: 15px;
@@ -33,7 +33,7 @@ body {
 .text1{
   padding: -1rem;
   color: rgb(5, 5, 5);
-  text-align: center;
+  text-align: left;
 }
 .button1 {
   display: inline-block;
@@ -42,7 +42,8 @@ body {
   text-decoration: none;
   user-select: none;
   margin-top: 2%;
-  margin-right: 15%;
+  margin-left: 7%;
+  margin-right: 6%;
   padding: .5em 2em;
   outline: none;
   border: 2px solid;
@@ -68,6 +69,18 @@ a.button1:active { background: rgb(115, 137, 108); }
 a.button2:hover { background: rgba(255,255,255,.2); }
 a.button2:active { background: rgb(130, 238, 94); }
 
+.flash{
+  padding: 10px;
+  margin-top: 3%;
+}
+.flash.success{
+  border: 10px solid #21DB56;
+  background: #AEFFC5;
+}
+.flash.error{
+  border: 10px solid #db2121;
+  background: #ffd5ae;
+}
 .input__name {
   color: #050129;
   opacity: 0.7;
@@ -88,7 +101,7 @@ a.button2:active { background: rgb(130, 238, 94); }
 
 <body>
 <p><h1 class = "title" align="center">Тестирование сотрудника</h1></p>
-<div class="alert2">
+<div class="alert1">
     <h2 align="center"> Заполните анкету для тестирования</h2>   
   <form action="/save" method="POST">
     <span class="input__box"> 
@@ -108,15 +121,22 @@ a.button2:active { background: rgb(130, 238, 94); }
       <input class = "input__year"  type = "text" name="year"></input>
       <input type="submit" value="Сохранить">
     </span>  
+    <span class="input__box">     
+    {% for cat, msg in get_flashed_messages(True) %}
+    <div class="flash {{cat}}">{{msg}}</div>
+    {% endfor %}
   </form>  
-  </div>        
-<div class="alert1">   
+  </div>     
+  {% if data %}   
+</span>    
+<div class="alert2">   
     <span class="input__box"> 
       <div class="text1"><b> На какую должность хотели бы пройти тестирование:</b></div>
     </span>   
     <a href="/developer/" class="button1">Разработчик</a>
     <a href="/tester/" class="button1">Тестировщик</a>
-    <a href="/analitix/" class="button1">Аналитик</a>    
+    <a href="/analitix/" class="button1">Аналитик</a>  
+    {% endif %}  
 </div>
 </body>
 </html>
