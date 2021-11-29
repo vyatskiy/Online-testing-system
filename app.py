@@ -1,10 +1,11 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 import psycopg2
 
 app = Flask(__name__)
+app.secret_key = "secret key"
 
-questions = [0]*10
+questions = [0] * 10
 @app.route('/')
 def hello():
     return render_template('index.html')
@@ -29,31 +30,38 @@ def analite():
 
 @app.route('/save', methods=['POST','GET'])
 def save():
+    data = True
     first_name = request.form['firstname']
     second_name = request.form['secondname']  
     city = request.form['city']  
     year = request.form['year']  
 
-    try:
-        conn = psycopg2.connect(dbname='d6hhit4rffokqg', user='jwibgjcvlajkpb', 
-                                password='e2f65328ae6f46ee34770897eb4ebf481f6c34d1d77848e8bb4edc902ce1e832',
-                                host='ec2-23-23-219-25.compute-1.amazonaws.com')
-    except:
-        print("I am unable to connect to the database") 
+    if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
+        data = False
+        flash('Не заполнены обязательные поля', category='error')
+    else:
+        flash('Данные сохранены', category='success')  
 
-    curs = conn.cursor()
-    curs.execute("INSERT INTO users (first_name, second_name, city, age) \
-        VALUES (" + first_name + ", " + second_name + ", " + city + ", " + year + ")")
+        try:
+            conn = psycopg2.connect(dbname='d6hhit4rffokqg', user='jwibgjcvlajkpb', 
+                                    password='e2f65328ae6f46ee34770897eb4ebf481f6c34d1d77848e8bb4edc902ce1e832',
+                                    host='ec2-23-23-219-25.compute-1.amazonaws.com')
+        except:
+            print("I am unable to connect to the database") 
 
-    curs.execute("select * from users")
-    records = curs.fetchall()
-    for row in records:
-        print(row)
-        
-    curs.close()
-    conn.close()
+        curs = conn.cursor()
+        curs.execute("INSERT INTO users (first_name, second_name, city, age) \
+            VALUES (" + first_name + ", " + second_name + ", " + city + ", " + year + ")")
 
-    return render_template('index.html')
+        curs.execute("select * from users")
+        records = curs.fetchall()
+        for row in records:
+            print(row)
+            
+        curs.close()
+        conn.close()  
+ 
+    return render_template('index.html', data = data)
 
 if __name__ == "__main__":
     app.run(debug=True)

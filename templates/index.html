@@ -7,7 +7,7 @@
 
 <body>
 <p><h1 class = "title" align="center">Тестирование сотрудника</h1></p>
-<div class="alert2">
+<div class="alert1">
     <h2 align="center"> Заполните анкету для тестирования</h2>   
   <form action="/save" method="POST">
     <span class="input__box"> 
@@ -27,15 +27,22 @@
       <input class = "input__year"  type = "text" name="year"></input>
       <input type="submit" value="Сохранить">
     </span>  
+    <span class="input__box">     
+    {% for cat, msg in get_flashed_messages(True) %}
+    <div class="flash {{cat}}">{{msg}}</div>
+    {% endfor %}
   </form>  
-  </div>        
-<div class="alert1">   
+  </div>     
+  {% if data %}   
+</span>    
+<div class="alert2">   
     <span class="input__box"> 
       <div class="text1"><b> На какую должность хотели бы пройти тестирование:</b></div>
     </span>   
     <a href="/developer/" class="button1">Разработчик</a>
     <a href="/tester/" class="button1">Тестировщик</a>
-    <a href="/analitix/" class="button1">Аналитик</a>    
+    <a href="/analitix/" class="button1">Аналитик</a>  
+    {% endif %}  
 </div>
 </body>
 </html>
