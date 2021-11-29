@@ -1,7 +1,8 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 
 app = Flask(__name__)
+app.secret_key = "secret key"
 
 questions = [0]*10
 @app.route('/')
@@ -28,11 +29,18 @@ def analite():
 
 @app.route('/save', methods=['POST','GET'])
 def save():
+    data = True
     first_name = request.form['firstname']
     second_name = request.form['secondname']  
     city = request.form['city']  
-    year = request.form['year']    
-    return render_template('index.html')
+    year = request.form['year']
+    if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
+        data = False
+        flash('Не заполнены обязательные поля', category='error')
+    else:
+        flash('Данные сохранены', category='success')    
+ 
+    return render_template('index.html',data = data)
 
 if __name__ == "__main__":
     app.run(debug=True)
