@@ -37,7 +37,7 @@ def save():
     year = request.form['year']  
 
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
-        data = False
+        data = True
         flash('Не заполнены обязательные поля', category='error')
     else:
         flash('Данные сохранены', category='success')  
