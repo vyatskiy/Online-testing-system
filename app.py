@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 import psycopg2
+import re
 
 app = Flask(__name__)
 app.secret_key = "secret key"
@@ -39,7 +40,10 @@ def save():
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
         data = False
         flash('Не заполнены обязательные поля', category='error')
-    else:
+    if re.search('\d', first_name) != None:
+        data = False
+        flash('Поле Имя заполненно некорректно: содержатся числа', category='error')
+    if data:
         flash('Данные сохранены', category='success')  
 
         try:
