@@ -34,44 +34,44 @@
 <body>
 <p><h1 align="center">Тестирование QA</h1></p>
 <div class="alert2">
-<form action="handler.php">
-    <p><b>1. {{questions[0]}}</b></p>
-     <p><input name="dzen" type="radio" value="nedzen"> Расхождение ожидаемого результата с фактическим.</p>
-     <p><input name="dzen" type="radio" value="dzen"> хз</p>
-     <p><input name="dzen" type="radio" value="pdzen" checked> Ошибка</p>
-   </form> 
-</div>    
-<div class="alert2">
-<form action="handler.php">
-    <p><b>2. {{questions[1]}}</b></p>
-        <p><input name="dzen" type="radio" value="nedzen"> да</p>
-        <p><input name="dzen" type="radio" value="dzen"> хз</p>
-        <p><input name="dzen" type="radio" value="pdzen" checked> Ошибка</p>
-    </form> 
-</div>   
-<div class="alert2">
     <form action="handler.php">
-        <p><b>3. {{questions[1]}}</b></p>
-            <p><input name="dzen" type="radio" value="nedzen"> да</p>
-            <p><input name="dzen" type="radio" value="dzen"> хз</p>
-            <p><input name="dzen" type="radio" value="pdzen" checked> нет</p>
+        <p><b>1. {{questions[0]}}</b></p>
+         <p><input name="dzen" type="radio" value="nedzen" checked> {{answersA[0]}}</p>
+         <p><input name="dzen" type="radio" value="dzen"> {{answersB[0]}}</p>
+         <p><input name="dzen" type="radio" 1value="pdzen"> {{answersC[0]}}</p>
+       </form> 
+    </div>    
+    <div class="alert2">
+    <form action="handler.php">
+        <p><b>2. {{questions[1]}}</b></p>
+            <p><input name="dzen" type="radio" value="nedzen" checked> {{answersA[1]}}</p>
+            <p><input name="dzen" type="radio" value="dzen"> {{answersB[1]}}</p>
+            <p><input name="dzen" type="radio" value="pdzen"> {{answersC[1]}}</p>
         </form> 
     </div>   
-<div class="alert2">
-    <form action="handler.php">
-        <p><b>4. {{questions[0]}}</b></p>
-            <p><input name="dzen" type="radio" value="nedzen"> Расхождение ожидаемого результата с фактическим.</p>
-            <p><input name="dzen" type="radio" value="dzen"> хз</p>
-            <p><input name="dzen" type="radio" value="pdzen" checked> Ошибка</p>
-        </form> 
-    </div>    
-<div class="alert2">
-    <form action="handler.php">
-        <p><b>5. {{questions[0]}}</b></p>
-            <p><input name="dzen" type="radio" value="nedzen"> Расхождение ожидаемого результата с фактическим.</p>
-            <p><input name="dzen" type="radio" value="dzen"> хз</p>
-            <p><input name="dzen" type="radio" value="pdzen" checked> Ошибка</p>
-        </form> 
-    </div>                 
+    <div class="alert2">
+        <form action="handler.php">
+            <p><b>3. {{questions[1]}}</b></p>
+                <p><input name="dzen" type="radio" value="nedzen" checked> {{answersA[2]}}</p>
+                <p><input name="dzen" type="radio" value="dzen"> {{answersB[2]}}</p>
+                <p><input name="dzen" type="radio" value="pdzen"> {{answersC[2]}}</p>
+            </form> 
+        </div>   
+    <div class="alert2">
+        <form action="handler.php">
+            <p><b>4. {{questions[0]}}</b></p>
+                <p><input name="dzen" type="radio" value="nedzen" checked> {{answersA[3]}}</p>
+                <p><input name="dzen" type="radio" value="dzen"> {{answersB[3]}}</p>
+                <p><input name="dzen" type="radio" value="pdzen"> {{answersC[3]}}</p>
+            </form> 
+        </div>    
+    <div class="alert2">
+        <form action="handler.php">
+            <p><b>5. {{questions[0]}}</b></p>
+                <p><input name="dzen" type="radio" value="nedzen" checked> {{answersA[4]}}</p>
+                <p><input name="dzen" type="radio" value="dzen"> {{answersB[4]}}</p>
+                <p><input name="dzen" type="radio" value="pdzen"> {{answersC[4]}}</p>
+            </form> 
+        </div> 
 </body>
 </html>
