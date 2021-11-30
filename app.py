@@ -42,5 +42,9 @@ def save():
  
     return render_template('index.html',data = data)
 
+#@app.route('/check_answer', method = ['POST', 'GET'])
+#def check():
+        
+
 if __name__ == "__main__":
     app.run(debug=True)
