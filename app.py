@@ -1,10 +1,11 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
+import psycopg2
 
 app = Flask(__name__)
 app.secret_key = "secret key"
 
-questions = [0]*10
+questions = [0] * 10
 @app.route('/')
 def hello():
     return render_template('index.html')
@@ -33,14 +34,35 @@ def save():
     first_name = request.form['firstname']
     second_name = request.form['secondname']  
     city = request.form['city']  
-    year = request.form['year']
+    year = request.form['year']  
+
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
         data = False
         flash('Не заполнены обязательные поля', category='error')
     else:
-        flash('Данные сохранены', category='success')    
+        flash('Данные сохранены', category='success')  
+
+        try:
+            conn = psycopg2.connect(dbname='d6hhit4rffokqg', user='jwibgjcvlajkpb', 
+                                    password='e2f65328ae6f46ee34770897eb4ebf481f6c34d1d77848e8bb4edc902ce1e832',
+                                    host='ec2-23-23-219-25.compute-1.amazonaws.com')
+        except:
+            print("I am unable to connect to the database") 
+
+        curs = conn.cursor()
+        curs.execute("INSERT INTO users (first_name, second_name, city, age) \
+            VALUES (" + first_name + ", " + second_name + ", " + city + ", " + year + ")")
+
+        curs.execute("select * from users")
+        records = curs.fetchall()
+        for row in records:
+            print(row)
+        
+        conn.commit()
+        curs.close()
+        conn.close()
  
-    return render_template('index.html',data = data)
+    return render_template('index.html', data = data)
 
 #@app.route('/check_answer', method = ['POST', 'GET'])
 #def check():
