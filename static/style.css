@@ -8,7 +8,9 @@ body {
     position: absolute;
     background-size: cover;
 	  color: rgb(0, 0, 0);
+    background-attachment:fixed;
    }
+
 
 .alert1 {
   background: rgb(179, 190, 255);
@@ -24,7 +26,7 @@ body {
 
 .alert2 {
   background: rgb(179, 190, 255);
-  padding: 1rem;
+  padding: 3rem;
   margin-top: 4%;
   margin-left: 15%;
   margin-right: 17%;
@@ -35,35 +37,32 @@ body {
 }
 
 .textfield{
+  margin-top: 2%;
+  margin-left: 15%;
   padding: -1rem;
   color: rgb(5, 5, 5);
   font-family: Bradley Hand, cursive;
-}
-
-.textfield1{
-  padding: -1rem;
-  color: rgb(5, 5, 5);
-  font-family: Bradley Hand, cursive;
-  margin-top: 1%;
 }
 
 .button1 {
-  display: inline-block;
   color: rgb(248, 255, 253);
   font-weight: 800;
   text-decoration: none;
   user-select: none;
-  margin-top: 2%;
-  margin-right: 15%;
+  margin-top: 10%;
+  margin-right: 5%;
   padding: .5em 2em;
   outline: none;
   border: 2px solid;
   border-radius: 1px;
   transition: 0.2s;
+  margin-left: 10%;
 } 
 
 a.button1:hover { background: rgba(255,255,255,.2); }
 a.button1:active { background: rgb(115, 137, 108); }
+
+
 
 .button2 {
   text-decoration: none;
@@ -80,36 +79,47 @@ a.button1:active { background: rgb(115, 137, 108); }
   color: white;
   box-shadow: 0 16px 32px 0 rgba(0, 40, 120, .35);
   transition: 0.5s;
-  margin-left: 80%;
+  margin-left: 60%;
 
 }
 .button2:hover {
   box-shadow: 0 0 0 0 rgba(0, 40, 120, 0);
   background-position: 0 0;
 }
+.button2:active { 
+  background: rgb(13, 16, 218); 
+}
 
 .flash{
   padding: 10px;
   margin-top: 3%;
+  font-family: Bradley Hand, cursive;
 }
 .flash.success{
   border: 10px solid #21DB56;
   background: #AEFFC5;
+  font-family: Bradley Hand, cursive;
 }
 .flash.error{
   border: 10px solid #db2121;
   background: #ffd5ae;
+  font-family: Bradley Hand, cursive;
 }
 
 .input__name {
+  margin-left: 15%;
   color: #050129;
   opacity: 0.7;
-  width: 100%;
+  width: 40%;
+  margin-top: 1%;
 }
 .input__year {
+  margin-left: 15%;
   color: #050129;
   opacity: 0.7;
   width: 20%;
+  margin-top: 1%;
+
 }
 h1{
   text-transform: uppercase;
