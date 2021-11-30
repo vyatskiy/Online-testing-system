@@ -43,24 +43,30 @@ def save():
         flash('Данные сохранены', category='success')  
 
         try:
-            conn = psycopg2.connect(dbname='d6hhit4rffokqg', user='jwibgjcvlajkpb', 
-                                    password='e2f65328ae6f46ee34770897eb4ebf481f6c34d1d77848e8bb4edc902ce1e832',
-                                    host='ec2-23-23-219-25.compute-1.amazonaws.com')
+            with open('logs.txt', 'r') as f:
+                for line in f:
+                    dbname, user, password, host = line.split()
+            print(dbname, user, password, host) 
+            
+            conn = psycopg2.connect(dbname=dbname, user=user, 
+                                password=password,
+                                host=host)
         except:
             print("I am unable to connect to the database") 
 
         curs = conn.cursor()
         curs.execute("INSERT INTO users (first_name, second_name, city, age) \
-            VALUES (" + first_name + ", " + second_name + ", " + city + ", " + year + ")")
+            VALUES (%s, %s, %s, %s)", (first_name, second_name, city, year))
+        conn.commit()
 
         curs.execute("select * from users")
         records = curs.fetchall()
         for row in records:
             print(row)
         
-        conn.commit()
         curs.close()
         conn.close()
+        f.close()
  
     return render_template('index.html', data = data)
 
