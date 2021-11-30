@@ -57,9 +57,10 @@ def save():
         records = curs.fetchall()
         for row in records:
             print(row)
-            
+        
+        conn.commit()
         curs.close()
-        conn.close()  
+        conn.close()
  
     return render_template('index.html', data = data)
 
