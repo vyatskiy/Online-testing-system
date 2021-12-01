@@ -89,8 +89,8 @@ def save():
         f.close()
  
     return render_template('index.html', data = data)
-
-@app.route('/saveAnswers', methods=['POST','GET'])
+'''
+@app.route('/send', methods=['POST','GET'])
 def save():
 
     data = True
@@ -134,5 +134,7 @@ def save():
         conn.close()
         f.close()
 
+    return render_template('index.html', data = data)
+'''
 if __name__ == "__main__":
     app.run(debug=True)
