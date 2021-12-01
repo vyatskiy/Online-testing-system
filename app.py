@@ -11,19 +11,19 @@ questions = [0] * 10
 def hello():
     return render_template('index.html')
 
-@app.route('/developer/', methods=['POST','GET'])
+@app.route('/developer', methods=['POST','GET'])
 def developer():
     questions[0] = DevelopersQuestions.D1
     questions[1] = DevelopersQuestions.D2
     return render_template('developer.html', questions = questions)
 
-@app.route('/tester/', methods=['POST','GET'])
+@app.route('/tester', methods=['POST','GET'])
 def tester():
     questions[0] = QAquestions.QA1
     questions[1] = QAquestions.QA2
     return render_template('tester.html', questions = questions)
 
-@app.route('/analitix/', methods=['POST','GET'])
+@app.route('/analitix', methods=['POST','GET'])
 def analite():
     questions[0] = AnalitixQuestions.A1
     questions[1] = AnalitixQuestions.A2
@@ -67,7 +67,6 @@ def save():
             with open('logs.txt', 'r') as f:
                 for line in f:
                     dbname, user, password, host = line.split()
-            print(dbname, user, password, host) 
             
             conn = psycopg2.connect(dbname=dbname, user=user, 
                                 password=password,
@@ -80,16 +79,60 @@ def save():
             VALUES (%s, %s, %s, %s)", (first_name, second_name, city, year))
         conn.commit()
 
-        curs.execute("select * from users")
-        records = curs.fetchall()
-        for row in records:
-            print(row)
+        # curs.execute("select * from users")
+        # records = curs.fetchall()
+        # for row in records:
+        #     print(row)
         
         curs.close()
         conn.close()
         f.close()
  
     return render_template('index.html', data = data)
+
+@app.route('/saveAnswers', methods=['POST','GET'])
+def save():
+
+    data = True
+    type = 1
+    first_answer = 1
+    second_anwser = 1
+    third_answer = 1
+    fourth_answer = 1
+    fifth_answer = 1
+    sixth_answer = ''
+    seventh_answer = ''
+    eighth_answer = ''
+
+    if data:
+        flash('Ответы сохранены, благодарим Вас', category='success')
+        try:
+            with open('logs.txt', 'r') as f:
+                for line in f:
+                    dbname, user, password, host = line.split()
+            
+            conn = psycopg2.connect(dbname=dbname, user=user, 
+                                password=password,
+                                host=host)
+        except:
+            print("I am unable to connect to the database") 
+
+        curs = conn.cursor()
+        curs.execute("INSERT INTO answers (type_test, first_quest, second_quest, \
+                    third_quest, fourth_quest, fifth_quest, sixth_quest, seventh_quest, \
+                    eighth_quest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
+                    (type, first_answer, second_anwser, third_answer, fourth_answer, \
+                    fifth_answer, sixth_answer, seventh_answer, eighth_answer))
+        conn.commit()
+
+        # curs.execute("select * from users")
+        # records = curs.fetchall()
+        # for row in records:
+        #     print(row)
+        
+        curs.close()
+        conn.close()
+        f.close()
 
 if __name__ == "__main__":
     app.run(debug=True)
