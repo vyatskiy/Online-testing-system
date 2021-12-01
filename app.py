@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 import psycopg2
+import re
 
 app = Flask(__name__)
 app.secret_key = "secret key"
@@ -39,28 +40,54 @@ def save():
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
         data = False
         flash('Не заполнены обязательные поля', category='error')
-    else:
+
+    elif re.search(r'\d', first_name) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', first_name) \
+        != None or len(first_name) > 20 or first_name[0].isupper() != True:
+        data = False
+        flash('Поле Имя заполненно некорректно', category='error')
+
+    elif re.search(r'\d', second_name) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', second_name) \
+        != None or len(second_name) > 20 or second_name[0].isupper() != True:
+        data = False
+        flash('Поле Фамилия заполненно некорректно', category='error')
+
+    elif re.search(r'\d', city) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', city) \
+        != None or len(city) > 20 or city[0].isupper() != True:
+        data = False
+        flash('Поле Город заполненно некорректно', category='error')
+
+    elif re.search(r'\D', year) != None or len(year) > 3:
+        data = False
+        flash('Поле Возраст заполненно некорректно', category='error')
+
+    elif data:
         flash('Данные сохранены', category='success')  
 
         try:
-            conn = psycopg2.connect(dbname='d6hhit4rffokqg', user='jwibgjcvlajkpb', 
-                                    password='e2f65328ae6f46ee34770897eb4ebf481f6c34d1d77848e8bb4edc902ce1e832',
-                                    host='ec2-23-23-219-25.compute-1.amazonaws.com')
+            with open('logs.txt', 'r') as f:
+                for line in f:
+                    dbname, user, password, host = line.split()
+            print(dbname, user, password, host) 
+            
+            conn = psycopg2.connect(dbname=dbname, user=user, 
+                                password=password,
+                                host=host)
         except:
             print("I am unable to connect to the database") 
 
         curs = conn.cursor()
         curs.execute("INSERT INTO users (first_name, second_name, city, age) \
-            VALUES (" + first_name + ", " + second_name + ", " + city + ", " + year + ")")
+            VALUES (%s, %s, %s, %s)", (first_name, second_name, city, year))
+        conn.commit()
 
         curs.execute("select * from users")
         records = curs.fetchall()
         for row in records:
             print(row)
         
-        conn.commit()
         curs.close()
         conn.close()
+        f.close()
  
     return render_template('index.html', data = data)
 
