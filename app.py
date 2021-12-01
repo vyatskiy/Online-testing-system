@@ -40,10 +40,27 @@ def save():
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
         data = False
         flash('Не заполнены обязательные поля', category='error')
-    if re.search('\d', first_name) != None:
+
+    elif re.search(r'\d', first_name) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', first_name) \
+        != None or len(first_name) > 20 or first_name[0].isupper() != True:
         data = False
-        flash('Поле Имя заполненно некорректно: содержатся числа', category='error')
-    if data:
+        flash('Поле Имя заполненно некорректно', category='error')
+
+    elif re.search(r'\d', second_name) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', second_name) \
+        != None or len(second_name) > 20 or second_name[0].isupper() != True:
+        data = False
+        flash('Поле Фамилия заполненно некорректно', category='error')
+
+    elif re.search(r'\d', city) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', city) \
+        != None or len(city) > 20 or city[0].isupper() != True:
+        data = False
+        flash('Поле Город заполненно некорректно', category='error')
+
+    elif re.search(r'\D', year) != None or len(year) > 3:
+        data = False
+        flash('Поле Возраст заполненно некорректно', category='error')
+
+    elif data:
         flash('Данные сохранены', category='success')  
 
         try:
