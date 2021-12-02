@@ -249,8 +249,9 @@ def get_pdf():
             os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable) 
             WKHTMLTOPDF_CMD = subprocess.Popen(['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')], 
                 stdout=subprocess.PIPE).communicate()[0].strip()
+            print(WKHTMLTOPDF_CMD)
             pdfkit_config = pdf.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
-
+    
     CORRECTS = 5 
     try:
         with open('logs.txt', 'r') as f:
