@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST
 import psycopg2
+import re
 
 app = Flask(__name__)
 app.secret_key = "secret key"
@@ -14,7 +15,7 @@ answersC = [0] * 5
 def hello():
     return render_template('index.html')
 
-@app.route('/developer/', methods=['POST','GET'])
+@app.route('/developer', methods=['POST','GET'])
 def developer():
     TYPE_TEST.type_test = 'Developer'
     questions[0] = DevelopersQuestions.D1
@@ -39,7 +40,7 @@ def developer():
     answersC[4] = DeveloperAnswer.C5                
     return render_template('developer.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
-@app.route('/tester/', methods=['POST','GET'])
+@app.route('/tester', methods=['POST','GET'])
 def tester():
     TYPE_TEST.type_test = 'Tester'
     questions[0] = QAquestions.Q1
@@ -64,7 +65,7 @@ def tester():
     answersC[4] = QAAnswers.C5  
     return render_template('tester.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
-@app.route('/analitix/', methods=['POST','GET'])
+@app.route('/analitix', methods=['POST','GET'])
 def analite():
     TYPE_TEST.type_test = 'Analitix'    
     questions[0] = AnalitixQuestions.A1
@@ -98,42 +99,70 @@ def save():
     year = request.form['year']  
 
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
-        data = False
+        data = True
         flash('Не заполнены обязательные поля', category='error')
-    else:
+
+    elif re.search(r'\d', first_name) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', first_name) \
+        != None or len(first_name) > 20 or first_name[0].isupper() != True:
+        data = False
+        flash('Поле Имя заполненно некорректно', category='error')
+
+    elif re.search(r'\d', second_name) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', second_name) \
+        != None or len(second_name) > 20 or second_name[0].isupper() != True:
+        data = False
+        flash('Поле Фамилия заполненно некорректно', category='error')
+
+    elif re.search(r'\d', city) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', city) \
+        != None or len(city) > 20 or city[0].isupper() != True:
+        data = False
+        flash('Поле Город заполненно некорректно', category='error')
+
+    elif re.search(r'\D', year) != None or len(year) > 3:
+        data = False
+        flash('Поле Возраст заполненно некорректно', category='error')
+
+    elif data:
         flash('Данные сохранены', category='success')  
 
         try:
-            conn = psycopg2.connect(dbname='d6hhit4rffokqg', user='jwibgjcvlajkpb', 
-                                    password='e2f65328ae6f46ee34770897eb4ebf481f6c34d1d77848e8bb4edc902ce1e832',
-                                    host='ec2-23-23-219-25.compute-1.amazonaws.com')
+            with open('logs.txt', 'r') as f:
+                for line in f:
+                    dbname, user, password, host = line.split()
+            
+            conn = psycopg2.connect(dbname=dbname, user=user, 
+                                password=password,
+                                host=host)
         except:
             print("I am unable to connect to the database") 
 
         curs = conn.cursor()
         curs.execute("INSERT INTO users (first_name, second_name, city, age) \
-            VALUES (" + first_name + ", " + second_name + ", " + city + ", " + year + ")")
-
-        curs.execute("select * from users")
-        records = curs.fetchall()
-        for row in records:
-            print(row)
-        
+            VALUES (%s, %s, %s, %s)", (first_name, second_name, city, year))
         conn.commit()
+
+        # curs.execute("select * from users")
+        # records = curs.fetchall()
+        # for row in records:
+        #     print(row)
+        
         curs.close()
         conn.close()
+        f.close()
  
     return render_template('index.html', data = data)
 
+
 @app.route('/save_answers', methods=['POST','GET'])
-def save_dev():
+def save_answers():
+    data = True
+    type = TYPE_TEST.type_test
     CORRECTS = 0
     FIRST = request.form.getlist('FIRST')
     SECOND = request.form.getlist('SECOND')
     THIRD = request.form.getlist('THIRD')
     FOURTH = request.form.getlist('FOURTH')
     FIFTH = request.form.getlist('FIFTH') 
-    if (TYPE_TEST.type_test) == 'Developer':
+    if type == 'Developer':
         if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
             CORRECTS += 1    
         if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
@@ -144,7 +173,7 @@ def save_dev():
             CORRECTS += 1
         if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
             CORRECTS += 1     
-    if (TYPE_TEST.type_test) == 'Tester':
+    if type == 'Tester':
         if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
             CORRECTS += 1    
         if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
@@ -155,7 +184,7 @@ def save_dev():
             CORRECTS += 1
         if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
             CORRECTS += 1 
-    if (TYPE_TEST.type_test) == 'Analitix':
+    if type == 'Analitix':
         if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
             CORRECTS += 1    
         if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
@@ -167,8 +196,41 @@ def save_dev():
         if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
             CORRECTS += 1                            
 
+    sixth_answer = ''
+    seventh_answer = ''
+    eighth_answer = ''
+
+    if data:
+        flash('Ответы сохранены, благодарим Вас', category='success')
+        try:
+            with open('logs.txt', 'r') as f:
+                for line in f:
+                    dbname, user, password, host = line.split()
+            
+            conn = psycopg2.connect(dbname=dbname, user=user, 
+                                password=password,
+                                host=host)
+        except:
+            print("I am unable to connect to the database") 
+
+        curs = conn.cursor()
+        curs.execute("INSERT INTO answers (type_test, first_quest, second_quest, \
+                    third_quest, fourth_quest, fifth_quest, sixth_quest, seventh_quest, \
+                    eighth_quest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
+                    (type, FIRST, SECOND, THIRD, FOURTH, \
+                    FIFTH, sixth_answer, seventh_answer, eighth_answer))
+        conn.commit()
+
+        # curs.execute("select * from users")
+        # records = curs.fetchall()
+        # for row in records:
+        #     print(row)
+        
+        curs.close()
+        conn.close()
+        f.close()
+
     return render_template('correct_answers.html', correct = CORRECTS)
-  
 
 if __name__ == "__main__":
     app.run(debug=True)
