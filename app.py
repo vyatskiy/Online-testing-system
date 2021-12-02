@@ -15,7 +15,7 @@ answersC = [0] * 5
 def hello():
     return render_template('index.html')
 
-@app.route('/developer', methods=['POST','GET'])
+@app.route('/developer/', methods=['POST','GET'])
 def developer():
     TYPE_TEST.type_test = 'Developer'
     questions[0] = DevelopersQuestions.D1
@@ -40,7 +40,7 @@ def developer():
     answersC[4] = DeveloperAnswer.C5                
     return render_template('developer.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
-@app.route('/tester', methods=['POST','GET'])
+@app.route('/tester/', methods=['POST','GET'])
 def tester():
     TYPE_TEST.type_test = 'Tester'
     questions[0] = QAquestions.Q1
@@ -65,7 +65,7 @@ def tester():
     answersC[4] = QAAnswers.C5  
     return render_template('tester.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
-@app.route('/analitix', methods=['POST','GET'])
+@app.route('/analitix/', methods=['POST','GET'])
 def analite():
     TYPE_TEST.type_test = 'Analitix'    
     questions[0] = AnalitixQuestions.A1
@@ -99,7 +99,7 @@ def save():
     year = request.form['year']  
 
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
-        data = True
+        data = False
         flash('Не заполнены обязательные поля', category='error')
 
     elif re.search(r'\d', first_name) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', first_name) \
@@ -155,14 +155,16 @@ def save():
 @app.route('/save_answers', methods=['POST','GET'])
 def save_answers():
     data = True
-    type = TYPE_TEST.type_test
+    type_test = TYPE_TEST.type_test
+    type = 0
     CORRECTS = 0
     FIRST = request.form.getlist('FIRST')
     SECOND = request.form.getlist('SECOND')
     THIRD = request.form.getlist('THIRD')
     FOURTH = request.form.getlist('FOURTH')
     FIFTH = request.form.getlist('FIFTH') 
-    if type == 'Developer':
+    if type_test == 'Developer':
+        type = 1
         if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
             CORRECTS += 1    
         if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
@@ -173,7 +175,8 @@ def save_answers():
             CORRECTS += 1
         if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
             CORRECTS += 1     
-    if type == 'Tester':
+    if type_test == 'Tester':
+        type = 2
         if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
             CORRECTS += 1    
         if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
@@ -184,7 +187,8 @@ def save_answers():
             CORRECTS += 1
         if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
             CORRECTS += 1 
-    if type == 'Analitix':
+    if type_test == 'Analitix':
+        type = 3
         if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
             CORRECTS += 1    
         if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
