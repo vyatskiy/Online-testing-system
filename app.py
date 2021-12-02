@@ -1,7 +1,11 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST
+import pandas as pd
+import pandas.io.sql as sqlio
+import pdfkit as pdf
 import psycopg2
+#import wkhtmltopdf
 import re
 
 app = Flask(__name__)
@@ -233,6 +237,32 @@ def save_answers():
         curs.close()
         conn.close()
         f.close()
+
+    return render_template('correct_answers.html', correct = CORRECTS)
+
+@app.route('/get-pdf/', methods=['POST','GET'])
+def get_pdf():
+
+    CORRECTS = 5 
+    try:
+        with open('logs.txt', 'r') as f:
+            for line in f:
+                dbname, user, password, host = line.split()
+        
+        conn = psycopg2.connect(dbname=dbname, user=user, 
+                            password=password,
+                            host=host)
+    except:
+        print("I am unable to connect to the database")
+
+    sql_request = "select * from users;"
+    df = sqlio.read_sql_query(sql_request, conn)
+    df.to_html('temp.html')
+    report = 'report.pdf'
+    pdf.from_file('temp.html', report)
+    
+    conn.close()
+    f.close()
 
     return render_template('correct_answers.html', correct = CORRECTS)
 
