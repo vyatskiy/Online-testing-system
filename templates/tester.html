@@ -1,49 +1,22 @@
 <html>
-<head background-color: salmon;>
-<style>    
-
-.alert2 {
-  background: rgb(179, 190, 255);
-  padding: 1rem;
-  margin-top: 5%;
-  margin-left: 15%;
-  margin-right: 17%;
-  border-radius: 15px;
-  color: rgb(11, 0, 74);
-  font-family: serif;
-}
-.button1 {
-    display: inline-block;
-    color: rgb(0, 182, 131);
-    font-weight: 800;
-    text-decoration: none;
-    user-select: none;
-    margin-top: 2%;
-    margin-right: 15%;
-    padding: .5em 2em;
-    outline: none;
-    border: 2px solid;
-    border-radius: 1px;
-    transition: 0.2s;
-    } 
-    a.button1:hover { background: rgba(255,255,255,.2); }
-    a.button1:active { background: rgb(201, 10, 10); }
-</style>    
-<title>Online testing system</title>
+<head background-color: salmon;> 
+    <meta charset="utf-8">
+    <title>Online testing system</title>
+    <link rel="stylesheet" href="/static/Tstyle.css">
 </head>
 <body>
 <p><h1 align="center">Тестирование QA</h1></p>
 <div class="alert2">
 <form action="handler.php">
-    <p><b>1. {{questions[0]}}</b></p>
-     <p><input name="dzen" type="radio" value="nedzen"> Расхождение ожидаемого результата с фактическим.</p>
+    <p><b>1. {{questions[0]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
+     <p><input name="dzen" type="radio" value="nedzen" class=""> Расхождение ожидаемого результата с фактическим.</p>
      <p><input name="dzen" type="radio" value="dzen"> хз</p>
      <p><input name="dzen" type="radio" value="pdzen" checked> Ошибка</p>
    </form> 
 </div>    
 <div class="alert2">
 <form action="handler.php">
-    <p><b>2. {{questions[1]}}</b></p>
+    <p><b>2. {{questions[1]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
         <p><input name="dzen" type="radio" value="nedzen"> да</p>
         <p><input name="dzen" type="radio" value="dzen"> хз</p>
         <p><input name="dzen" type="radio" value="pdzen" checked> Ошибка</p>
@@ -51,7 +24,7 @@
 </div>   
 <div class="alert2">
     <form action="handler.php">
-        <p><b>3. {{questions[1]}}</b></p>
+        <p><b>3. {{questions[1]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
             <p><input name="dzen" type="radio" value="nedzen"> да</p>
             <p><input name="dzen" type="radio" value="dzen"> хз</p>
             <p><input name="dzen" type="radio" value="pdzen" checked> нет</p>
@@ -59,7 +32,7 @@
     </div>   
 <div class="alert2">
     <form action="handler.php">
-        <p><b>4. {{questions[0]}}</b></p>
+        <p><b>4. {{questions[0]}}</b><img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
             <p><input name="dzen" type="radio" value="nedzen"> Расхождение ожидаемого результата с фактическим.</p>
             <p><input name="dzen" type="radio" value="dzen"> хз</p>
             <p><input name="dzen" type="radio" value="pdzen" checked> Ошибка</p>
@@ -67,11 +40,13 @@
     </div>    
 <div class="alert2">
     <form action="handler.php">
-        <p><b>5. {{questions[0]}}</b></p>
+        <p><b>5. {{questions[0]}}</b><img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
             <p><input name="dzen" type="radio" value="nedzen"> Расхождение ожидаемого результата с фактическим.</p>
             <p><input name="dzen" type="radio" value="dzen"> хз</p>
             <p><input name="dzen" type="radio" value="pdzen" checked> Ошибка</p>
         </form> 
-    </div>                 
+    </div>     
+    <p align = "center"><img src="https://i.gifer.com/ZAc2.gif"></p>
+          
 </body>
 </html>

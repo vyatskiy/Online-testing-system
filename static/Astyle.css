@@ -1,0 +1,60 @@
+html,
+
+body {
+    /*background-image: url(https://oir.mobi/uploads/posts/2021-02/1612345435_28-p-anime-programmist-art-kartinki-33.jpg);*/
+    background-image: url(https://i.gifer.com/133C.gif);
+    margin: 0;
+	color: rgb(0, 0, 0);
+    background-attachment:fixed;
+}
+
+h1{
+    text-transform: uppercase;
+    color: #33beff;
+    font-style: bolder italic;
+    font-family: Bradley Hand, cursive;
+    font-size: 58px;
+    line-height: 54px;
+    text-shadow: 5px 8px 0 rgba(0,0,0,0.2);
+    padding: 5px;
+    background: #2b2c31;
+    opacity: 0.75;
+    display: inline-block;
+    margin-left: 15%;
+    
+  }
+  
+  p {
+    font-family: Bradley Hand, cursive;
+    font-size: 19px;
+  }
+
+.alert2 {
+    background: rgb(119, 122, 138);
+    padding: 1rem;
+    margin-top: 5%;
+    margin-left: 15%;
+    margin-right: 17%;
+    border-radius: 15px;
+    color: rgb(11, 0, 74);
+    font-family: serif;
+    opacity: 0.9;
+  }
+
+  .button1 {
+      display: inline-block;
+      color: rgb(0, 182, 131);
+      font-weight: 800;
+      text-decoration: none;
+      user-select: none;
+      margin-top: 2%;
+      margin-right: 15%;
+      padding: .5em 2em;
+      outline: none;
+      border: 2px solid;
+      border-radius: 1px;
+      transition: 0.2s;
+      } 
+      
+      a.button1:hover { background: rgba(255,255,255,.2); }
+      a.button1:active { background: rgb(201, 10, 10); }

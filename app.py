@@ -38,7 +38,7 @@ def save():
     year = request.form['year']  
 
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
-        data = False
+        data = True
         flash('Не заполнены обязательные поля', category='error')
 
     elif re.search(r'\d', first_name) != None or re.search(r'[/\.,;:@\'\"#$%^&-+{}<>!*`~|\[\]\s\t\n\r]', first_name) \
