@@ -7,7 +7,7 @@ class QAAnswers:
     A2 = "Ответ А"
     B2 = "Ответ Б"
     C2 = "Ответ С" 
-    CORRECT_ANSWER_QA2 = ['A', 'B']
+    CORRECT_ANSWER_QA2 = ['A', 'C']
 
     A3 = "Ответ А"
     B3 = "Ответ Б"
@@ -17,7 +17,7 @@ class QAAnswers:
     A4 = "Ответ А"
     B4 = "Ответ Б"
     C4 = "Ответ С" 
-    CORRECT_ANSWER_QA4 = ['A', 'B']    
+    CORRECT_ANSWER_QA4 = ['B', 'C']    
     
     A5 = "Ответ А"
     B5 = "Ответ Б"
