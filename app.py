@@ -5,7 +5,7 @@ import pandas as pd
 import pandas.io.sql as sqlio
 import pdfkit as pdf
 import psycopg2
-#import wkhtmltopdf
+import os, sys, subprocess, platform
 import re
 
 app = Flask(__name__)
@@ -243,6 +243,14 @@ def save_answers():
 @app.route('/get-pdf/', methods=['POST','GET'])
 def get_pdf():
 
+    if platform.system() == "Windows":
+            pdfkit_config = pdf.configuration(wkhtmltopdf=os.environ.get('WKHTMLTOPDF_BINARY', 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'))
+    else:
+            os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable) 
+            WKHTMLTOPDF_CMD = subprocess.Popen(['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')], 
+                stdout=subprocess.PIPE).communicate()[0].strip()
+            pdfkit_config = pdf.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
+
     CORRECTS = 5 
     try:
         with open('logs.txt', 'r') as f:
@@ -259,7 +267,7 @@ def get_pdf():
     df = sqlio.read_sql_query(sql_request, conn)
     df.to_html('temp.html')
     report = 'report.pdf'
-    pdf.from_file('temp.html', report)
+    pdf.from_file('temp.html', report, configuration=pdfkit_config)
     
     conn.close()
     f.close()
