@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
-from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer
+from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST
 import psycopg2
 
 app = Flask(__name__)
@@ -16,6 +16,7 @@ def hello():
 
 @app.route('/developer/', methods=['POST','GET'])
 def developer():
+    TYPE_TEST.type_test = 'Developer'
     questions[0] = DevelopersQuestions.D1
     questions[1] = DevelopersQuestions.D2
     questions[2] = DevelopersQuestions.D3
@@ -40,6 +41,7 @@ def developer():
 
 @app.route('/tester/', methods=['POST','GET'])
 def tester():
+    TYPE_TEST.type_test = 'Tester'
     questions[0] = QAquestions.Q1
     questions[1] = QAquestions.Q2
     questions[2] = QAquestions.Q3
@@ -64,6 +66,7 @@ def tester():
 
 @app.route('/analitix/', methods=['POST','GET'])
 def analite():
+    TYPE_TEST.type_test = 'Analitix'    
     questions[0] = AnalitixQuestions.A1
     questions[1] = AnalitixQuestions.A2
     questions[2] = AnalitixQuestions.A3
@@ -122,6 +125,50 @@ def save():
  
     return render_template('index.html', data = data)
 
+@app.route('/save_answers', methods=['POST','GET'])
+def save_dev():
+    CORRECTS = 0
+    FIRST = request.form.getlist('FIRST')
+    SECOND = request.form.getlist('SECOND')
+    THIRD = request.form.getlist('THIRD')
+    FOURTH = request.form.getlist('FOURTH')
+    FIFTH = request.form.getlist('FIFTH') 
+    if (TYPE_TEST.type_test) == 'Developer':
+        if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
+            CORRECTS += 1    
+        if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
+            CORRECTS += 1
+        if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
+            CORRECTS += 1
+        if FOURTH == DeveloperAnswer.CORRECT_ANSWER_D4:
+            CORRECTS += 1
+        if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
+            CORRECTS += 1     
+    if (TYPE_TEST.type_test) == 'Tester':
+        if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
+            CORRECTS += 1    
+        if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
+            CORRECTS += 1
+        if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
+            CORRECTS += 1
+        if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
+            CORRECTS += 1
+        if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
+            CORRECTS += 1 
+    if (TYPE_TEST.type_test) == 'Analitix':
+        if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
+            CORRECTS += 1    
+        if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
+            CORRECTS += 1
+        if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
+            CORRECTS += 1
+        if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+            CORRECTS += 1
+        if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+            CORRECTS += 1                            
+
+    return render_template('correct_answers.html', correct = CORRECTS)
+  
 
 if __name__ == "__main__":
     app.run(debug=True)
