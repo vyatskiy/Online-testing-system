@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
-from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST
+from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST, Answers
 import psycopg2
 import re
 
@@ -11,6 +11,7 @@ questions = [0] * 5
 answersA = [0] * 5
 answersB = [0] * 5
 answersC = [0] * 5
+SecondTaskA = [0] * 3
 @app.route('/')
 def hello():
     return render_template('index.html')
@@ -158,51 +159,75 @@ def save_answers():
     type_test = TYPE_TEST.type_test
     type = 0
     CORRECTS = 0
-    FIRST = request.form.getlist('FIRST')
-    SECOND = request.form.getlist('SECOND')
-    THIRD = request.form.getlist('THIRD')
-    FOURTH = request.form.getlist('FOURTH')
-    FIFTH = request.form.getlist('FIFTH') 
-    if type_test == 'Developer':
-        type = 1
-        if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
-            CORRECTS += 1    
-        if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
-            CORRECTS += 1
-        if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
-            CORRECTS += 1
-        if FOURTH == DeveloperAnswer.CORRECT_ANSWER_D4:
-            CORRECTS += 1
-        if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
-            CORRECTS += 1     
-    if type_test == 'Tester':
-        type = 2
-        if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
-            CORRECTS += 1    
-        if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
-            CORRECTS += 1
-        if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
-            CORRECTS += 1
-        if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
-            CORRECTS += 1
-        if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
-            CORRECTS += 1 
-    if type_test == 'Analitix':
-        type = 3
-        if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
-            CORRECTS += 1    
-        if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
-            CORRECTS += 1
-        if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
-            CORRECTS += 1
-        if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
-            CORRECTS += 1
-        if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
-            CORRECTS += 1                            
 
-    sixth_answer = ''
-    seventh_answer = ''
-    eighth_answer = ''
+    if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
+        FIRST = request.form.getlist('FIRST')
+        SECOND = request.form.getlist('SECOND')
+        THIRD = request.form.getlist('THIRD')
+        FOURTH = request.form.getlist('FOURTH')
+        FIFTH = request.form.getlist('FIFTH') 
+        if type_test == 'Developer':
+            type = 1
+            if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
+                CORRECTS += 1 
+                Answers.FIRST = FIRST
+            if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
+                CORRECTS += 1
+                Answers.SECOND
+            if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
+                CORRECTS += 1
+                Answers.THIRD = THIRD
+            if FOURTH == DeveloperAnswer.CORRECT_ANSWER_D4:
+                CORRECTS += 1
+                Answers.FOURTH = FOURTH
+            if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
+                CORRECTS += 1     
+                Answers.FIVE = FIFTH
+        if type_test == 'Tester':
+            type = 2
+            if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
+                CORRECTS += 1    
+            if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
+                CORRECTS += 1
+            if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
+                CORRECTS += 1
+            if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
+                CORRECTS += 1
+            if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
+                CORRECTS += 1 
+        if type_test == 'Analitix':
+            type = 3
+            if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
+                CORRECTS += 1    
+            if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
+                CORRECTS += 1
+            if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
+                CORRECTS += 1
+            if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+                CORRECTS += 1
+            if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+                CORRECTS += 1   
+
+        if CORRECTS >= 4 :
+            type_test = type_test + 'SECOND'
+            if type_test == 'DeveloperSECOND':
+                SecondTaskA[0] = DeveloperAnswer.A1  
+                SecondTaskA[1] = DeveloperAnswer.A2    
+                SecondTaskA[2] = DeveloperAnswer.A3 
+                return render_template('correct_answers.html', correct = CORRECTS, SecondTaskA = SecondTaskA)
+
+            # insert_answers_bd(type, data, Answers.FIRST, Answers.SECOND, Answers.THIRD/
+            #                      Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)
+        
+        else:
+            sixth_answer = ''
+            seventh_answer = ''
+            eighth_answer = ''
+            insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
+
+            return render_template('correct_answers.html', correct = CORRECTS)
+
+def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer):
 
     if data:
         flash('Ответы сохранены, благодарим Вас', category='success')
@@ -233,8 +258,8 @@ def save_answers():
         curs.close()
         conn.close()
         f.close()
+    
 
-    return render_template('correct_answers.html', correct = CORRECTS)
 
 if __name__ == "__main__":
     app.run(debug=True)
