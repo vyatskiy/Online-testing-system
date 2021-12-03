@@ -140,6 +140,7 @@ def save():
         curs.execute("INSERT INTO users (first_name, second_name, city, age) \
             VALUES (%s, %s, %s, %s)", (first_name, second_name, city, year))
         conn.commit()
+        TYPE_TEST.OPEN_FORM = 0
 
         # curs.execute("select * from users")
         # records = curs.fetchall()
@@ -152,6 +153,30 @@ def save():
  
     return render_template('index.html', data = data)
 
+@app.route('/end_and_save', methods=['POST','GET'])
+def end_and_save():
+    type_test = TYPE_TEST.type_test 
+    type = 0
+    data = True
+    if type_test == 'DeveloperSECOND':
+        type = 1
+    if type_test == 'TesterSECOND':
+        type = 2
+    if type_test == 'AnalitixSECOND':
+        type = 3                                
+    sixth_answer = request.form['FIRST']
+    seventh_answer = request.form['SECOND']  
+    eighth_answer = request.form['THIRD']  
+    insert_answers_bd(type, data, Answers.FIRST, Answers.SECOND, Answers.THIRD,
+                Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)     
+    flash('Ответы сохранены, благодарим Вас', category='success')               
+    return render_template('index.html')
+
+@app.route('/end', methods=['POST','GET'])
+def end():   
+    flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error') 
+    return render_template('index.html')
+
 
 @app.route('/save_answers', methods=['POST','GET'])
 def save_answers():
@@ -159,105 +184,113 @@ def save_answers():
     type_test = TYPE_TEST.type_test
     type = 0
     CORRECTS = 0
+    if TYPE_TEST.OPEN_FORM == 0:
+        TYPE_TEST.OPEN_FORM = 1
+        if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
+            FIRST = request.form.getlist('FIRST')
+            SECOND = request.form.getlist('SECOND')
+            THIRD = request.form.getlist('THIRD')
+            FOURTH = request.form.getlist('FOURTH')
+            FIFTH = request.form.getlist('FIFTH') 
+            if type_test == 'Developer':
+                type = 1
+                if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
+                    CORRECTS += 1 
+                    Answers.FIRST = FIRST
+                if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
+                    CORRECTS += 1
+                    Answers.SECOND
+                if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
+                    CORRECTS += 1
+                    Answers.THIRD = THIRD
+                if FOURTH == DeveloperAnswer.CORRECT_ANSWER_D4:
+                    CORRECTS += 1
+                    Answers.FOURTH = FOURTH
+                if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
+                    CORRECTS += 1     
+                    Answers.FIVE = FIFTH
+            if type_test == 'Tester':
+                type = 2
+                if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
+                    CORRECTS += 1    
+                if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
+                    CORRECTS += 1
+                if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
+                    CORRECTS += 1
+                if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
+                    CORRECTS += 1
+                if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
+                    CORRECTS += 1 
+            if type_test == 'Analitix':
+                type = 3
+                if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
+                    CORRECTS += 1    
+                if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
+                    CORRECTS += 1
+                if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
+                    CORRECTS += 1
+                if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+                    CORRECTS += 1
+                if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+                    CORRECTS += 1   
 
-    if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
-        FIRST = request.form.getlist('FIRST')
-        SECOND = request.form.getlist('SECOND')
-        THIRD = request.form.getlist('THIRD')
-        FOURTH = request.form.getlist('FOURTH')
-        FIFTH = request.form.getlist('FIFTH') 
-        if type_test == 'Developer':
-            type = 1
-            if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
-                CORRECTS += 1 
-                Answers.FIRST = FIRST
-            if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
-                CORRECTS += 1
-                Answers.SECOND
-            if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
-                CORRECTS += 1
-                Answers.THIRD = THIRD
-            if FOURTH == DeveloperAnswer.CORRECT_ANSWER_D4:
-                CORRECTS += 1
-                Answers.FOURTH = FOURTH
-            if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
-                CORRECTS += 1     
-                Answers.FIVE = FIFTH
-        if type_test == 'Tester':
-            type = 2
-            if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
-                CORRECTS += 1    
-            if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
-                CORRECTS += 1
-            if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
-                CORRECTS += 1
-            if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
-                CORRECTS += 1
-            if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
-                CORRECTS += 1 
-        if type_test == 'Analitix':
-            type = 3
-            if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
-                CORRECTS += 1    
-            if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
-                CORRECTS += 1
-            if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
-                CORRECTS += 1
-            if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
-                CORRECTS += 1
-            if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
-                CORRECTS += 1   
-
-        if CORRECTS >= 4 :
-            type_test = type_test + 'SECOND'
-            if type_test == 'DeveloperSECOND':
-                SecondTaskA[0] = DeveloperAnswer.A1  
-                SecondTaskA[1] = DeveloperAnswer.A2    
-                SecondTaskA[2] = DeveloperAnswer.A3 
+            if CORRECTS >= 4 :
+                type_test = type_test + 'SECOND'
+                if type_test == 'DeveloperSECOND':
+                    SecondTaskA[0] = DevelopersQuestions.DS1  
+                    SecondTaskA[1] = DevelopersQuestions.DS2    
+                    SecondTaskA[2] = DevelopersQuestions.DS3  
+                if type_test == 'TesterSECOND':
+                    SecondTaskA[0] = QAquestions.QS1  
+                    SecondTaskA[1] = QAquestions.QS2   
+                    SecondTaskA[2] = QAquestions.QS3
+                if type_test == 'AnalitixSECOND':
+                    SecondTaskA[0] = AnalitixQuestions.AS1 
+                    SecondTaskA[1] = AnalitixQuestions.AS2    
+                    SecondTaskA[2] = AnalitixQuestions.AS3          
                 return render_template('correct_answers.html', correct = CORRECTS, SecondTaskA = SecondTaskA)
+            else:
+                sixth_answer = ''
+                seventh_answer = ''
+                eighth_answer = ''
+                insert_answers_bd(type, data, FIRST, SECOND, THIRD,
+                FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
 
-            # insert_answers_bd(type, data, Answers.FIRST, Answers.SECOND, Answers.THIRD/
-            #                      Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)
-        
-        else:
-            sixth_answer = ''
-            seventh_answer = ''
-            eighth_answer = ''
-            insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
-
-            return render_template('correct_answers.html', correct = CORRECTS)
+                return render_template('correct_answers.html', correct = CORRECTS)
+    else:
+        flash("Ошибка: попытка повторного прохождения теста!", category='error')    
+        return render_template('index.html')            
 
 def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer):
-
-    if data:
-        flash('Ответы сохранены, благодарим Вас', category='success')
-        try:
-            with open('logs.txt', 'r') as f:
-                for line in f:
-                    dbname, user, password, host = line.split()
+    pass
+    #if data:
+        #try:
+            #with open('logs.txt', 'r') as f:
+                #for line in f:
+                    #dbname, user, password, host = line.split()
             
-            conn = psycopg2.connect(dbname=dbname, user=user, 
-                                password=password,
-                                host=host)
-        except:
-            print("I am unable to connect to the database") 
+            #conn = psycopg2.connect(dbname=dbname, user=user, 
+                                #password=password,
+                                #host=host)
+        #except:
+            #print("I am unable to connect to the database") 
 
-        curs = conn.cursor()
-        curs.execute("INSERT INTO answers (type_test, first_quest, second_quest, \
-                    third_quest, fourth_quest, fifth_quest, sixth_quest, seventh_quest, \
-                    eighth_quest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
-                    (type, FIRST, SECOND, THIRD, FOURTH, \
-                    FIFTH, sixth_answer, seventh_answer, eighth_answer))
-        conn.commit()
+        #curs = conn.cursor()
+        #curs.execute("INSERT INTO answers (type_test, first_quest, second_quest, \
+                    #third_quest, fourth_quest, fifth_quest, sixth_quest, seventh_quest, \
+                    #eighth_quest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
+                    #(type, FIRST, SECOND, THIRD, FOURTH, \
+                    #FIFTH, sixth_answer, seventh_answer, eighth_answer))
+        #conn.commit()
 
         # curs.execute("select * from users")
         # records = curs.fetchall()
         # for row in records:
         #     print(row)
         
-        curs.close()
-        conn.close()
-        f.close()
+        #curs.close()
+        #conn.close()
+        #f.close()
     
 
 

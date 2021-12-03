@@ -79,6 +79,7 @@ class DeveloperAnswer:
 
 class TYPE_TEST:   
     type_test = 'None'
+    OPEN_FORM = 0
 
 class Answers:
     FIRST = 'None'

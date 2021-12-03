@@ -5,18 +5,32 @@
 <body>
 <p><h1 align="center">Результат первого этапа тестирования: {{correct}}/5</h1></p>
 
-<form action="/save_answers" method="POST">
     {% if correct >= 4 %}   
+    <form action="/end_and_save" method="POST">
     <div>
-            <p><b>1. {{SecondTaskA[0]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
-            <p><input name="FIRST" type="text"></p>
-            <p><b>2. {{SecondTaskA[0]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
-            <p><input name="SECOND" type="text"></p>
-            <p><b>3. {{SecondTaskA[0]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
-            <p><input name="THIRD" type="text"></p>
-            <input class = "button2" type="submit" value="Отправить">
-    </div>    
+            <h2 align="center"> По результатам первого этапа вы набрали достаточное количество баллов для прохождения второго этапа</h2>
+            <div class="alert2">
+                <p><b>1. {{SecondTaskA[0]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
+                <p><input name="FIRST" type="text"></p>
+            </div> 
+            <div class="alert2">
+                <p><b>2. {{SecondTaskA[1]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
+                <p><input name="SECOND" type="text"></p>
+            </div>
+            <div class="alert2">
+                <p><b>3. {{SecondTaskA[2]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
+                <p><input name="THIRD" type="text"></p>
+                <input class = "button2" type="submit" value="Сохранить и завершить">
+            </div>
+        </div>        
+        </form>   
+    {% else %}
+    <form action="/end" method="POST">
+        <h2 align="center"> По результатам первого этапа вы не набрали достаточное количество баллов для прохождения второго этапа</h2>
+        <div class="alert2">
+            <input class = "button2" type="submit" value="Завершить">
+        </div> 
+    </form>    
     {% endif %}  
-</form>
 </body>
 </html>
