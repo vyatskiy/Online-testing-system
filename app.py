@@ -156,6 +156,7 @@ def save():
 @app.route('/end_and_save', methods=['POST','GET'])
 def end_and_save():
     type_test = TYPE_TEST.type_test 
+    print(type_test)
     type = 0
     data = True
     if type_test == 'DeveloperSECOND':
@@ -199,7 +200,7 @@ def save_answers():
                     Answers.FIRST = FIRST
                 if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
                     CORRECTS += 1
-                    Answers.SECOND
+                    Answers.SECOND = SECOND
                 if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
                     CORRECTS += 1
                     Answers.THIRD = THIRD
@@ -236,6 +237,7 @@ def save_answers():
 
             if CORRECTS >= 4 :
                 type_test = type_test + 'SECOND'
+                TYPE_TEST.type_test = type_test
                 if type_test == 'DeveloperSECOND':
                     SecondTaskA[0] = DevelopersQuestions.DS1  
                     SecondTaskA[1] = DevelopersQuestions.DS2    
@@ -262,35 +264,34 @@ def save_answers():
         return render_template('index.html')            
 
 def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer):
-    pass
-    #if data:
-        #try:
-            #with open('logs.txt', 'r') as f:
-                #for line in f:
-                    #dbname, user, password, host = line.split()
+    if data:
+        try:
+            with open('logs.txt', 'r') as f:
+                for line in f:
+                    dbname, user, password, host = line.split()
             
-            #conn = psycopg2.connect(dbname=dbname, user=user, 
-                                #password=password,
-                                #host=host)
-        #except:
-            #print("I am unable to connect to the database") 
+            conn = psycopg2.connect(dbname=dbname, user=user, 
+                                password=password,
+                                host=host)
+        except:
+            print("I am unable to connect to the database") 
 
-        #curs = conn.cursor()
-        #curs.execute("INSERT INTO answers (type_test, first_quest, second_quest, \
-                    #third_quest, fourth_quest, fifth_quest, sixth_quest, seventh_quest, \
-                    #eighth_quest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
-                    #(type, FIRST, SECOND, THIRD, FOURTH, \
-                    #FIFTH, sixth_answer, seventh_answer, eighth_answer))
-        #conn.commit()
+        curs = conn.cursor()
+        curs.execute("INSERT INTO answers (type_test, first_quest, second_quest, \
+                    third_quest, fourth_quest, fifth_quest, sixth_quest, seventh_quest, \
+                    eighth_quest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
+                    (type, FIRST, SECOND, THIRD, FOURTH, \
+                    FIFTH, sixth_answer, seventh_answer, eighth_answer))
+        conn.commit()
 
-        # curs.execute("select * from users")
-        # records = curs.fetchall()
-        # for row in records:
-        #     print(row)
+        curs.execute("select * from answers")
+        records = curs.fetchall()
+        for row in records:
+            print(row)
         
-        #curs.close()
-        #conn.close()
-        #f.close()
+        curs.close()
+        conn.close()
+        f.close()
     
 
 
