@@ -1,7 +1,11 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST, Answers
+import pandas as pd
+import pandas.io.sql as sqlio
+import pdfkit as pdf
 import psycopg2
+import os, sys, subprocess, platform
 import re
 
 app = Flask(__name__)
@@ -294,6 +298,41 @@ def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_ans
         f.close()
     
 
+
+@app.route('/get-pdf/', methods=['POST','GET'])
+def get_pdf():
+
+    if platform.system() == "Windows":
+            pdfkit_config = pdf.configuration(wkhtmltopdf=os.environ.get('WKHTMLTOPDF_BINARY', 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'))
+    else:
+            os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable) 
+            WKHTMLTOPDF_CMD = subprocess.Popen(['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')], 
+                stdout=subprocess.PIPE).communicate()[0].strip()
+            print(WKHTMLTOPDF_CMD)
+            pdfkit_config = pdf.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
+    
+    CORRECTS = 5 
+    try:
+        with open('logs.txt', 'r') as f:
+            for line in f:
+                dbname, user, password, host = line.split()
+        
+        conn = psycopg2.connect(dbname=dbname, user=user, 
+                            password=password,
+                            host=host)
+    except:
+        print("I am unable to connect to the database")
+
+    sql_request = "select * from users;"
+    df = sqlio.read_sql_query(sql_request, conn)
+    df.to_html('temp.html')
+    report = 'report.pdf'
+    pdf.from_file('temp.html', report, configuration=pdfkit_config)
+    
+    conn.close()
+    f.close()
+
+    return render_template('correct_answers.html', correct = CORRECTS)
 
 if __name__ == "__main__":
     app.run(debug=True)
