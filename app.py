@@ -1,9 +1,9 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST, Answers
-import pandas as pd
-import pandas.io.sql as sqlio
-import pdfkit as pdf
+#import pandas as pd
+#import pandas.io.sql as sqlio
+#import pdfkit as pdf
 import psycopg2
 import os, sys, subprocess, platform
 import re
@@ -175,12 +175,14 @@ def end_and_save():
     insert_answers_bd(type, data, Answers.FIRST, Answers.SECOND, Answers.THIRD,
                 Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)     
     flash('Ответы сохранены, благодарим Вас', category='success')               
-    return render_template('index.html')
+    printResults = True
+    return render_template('index.html', printR = printResults)
 
 @app.route('/end', methods=['POST','GET'])
 def end():   
     flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error') 
-    return render_template('index.html')
+    printResults = True
+    return render_template('index.html', printR = printResults)
 
 
 @app.route('/save_answers', methods=['POST','GET'])
@@ -301,6 +303,7 @@ def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_ans
 
 @app.route('/get-pdf/', methods=['POST','GET'])
 def get_pdf():
+    pdf = 1
 
     if platform.system() == "Windows":
             pdfkit_config = pdf.configuration(wkhtmltopdf=os.environ.get('WKHTMLTOPDF_BINARY', 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'))
