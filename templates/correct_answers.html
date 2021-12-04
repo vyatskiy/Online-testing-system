@@ -1,38 +1,39 @@
 <html>
 <head background-color: salmon;>
-<style>
-    .alert2 {
-        background: rgb(179, 190, 255);
-        padding: 1rem;
-        margin-top: 5%;
-        margin-left: 15%;
-        margin-right: 17%;
-        border-radius: 15px;
-        color: rgb(11, 0, 74);
-        font-family: serif;
-      }
-      .button1 {
-          display: inline-block;
-          color: rgb(0, 182, 131);
-          font-weight: 800;
-          text-decoration: none;
-          user-select: none;
-          margin-top: 2%;
-          margin-right: 15%;
-          padding: .5em 2em;
-          outline: none;
-          border: 2px solid;
-          border-radius: 1px;
-          } 
-          a.button1:hover { background: rgba(255,255,255,.2); }
-          a.button1:active { background: rgb(201, 10, 10); }
-      </style>    
 <title>Online testing system</title>
 </head>
 <body>
-<p><h1 align="center">Количество правильных ответов:{{correct}}</h1></p>
+<p><h1 align="center">Результат первого этапа тестирования: {{correct}}/5</h1></p>
+
+    {% if correct >= 4 %}   
+    <form action="/end_and_save" method="POST">
+    <div>
+            <h2 align="center"> По результатам первого этапа вы набрали достаточное количество баллов для прохождения второго этапа</h2>
+            <div class="alert2">
+                <p><b>1. {{SecondTaskA[0]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
+                <p><input name="FIRST" type="text"></p>
+            </div> 
+            <div class="alert2">
+                <p><b>2. {{SecondTaskA[1]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
+                <p><input name="SECOND" type="text"></p>
+            </div>
+            <div class="alert2">
+                <p><b>3. {{SecondTaskA[2]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
+                <p><input name="THIRD" type="text"></p>
+                <input class = "button2" type="submit" value="Сохранить и завершить">
+            </div>
+        </div>        
+        </form>   
+    {% else %}
+    <form action="/end" method="POST">
+        <h2 align="center"> По результатам первого этапа вы не набрали достаточное количество баллов для прохождения второго этапа</h2>
+        <div class="alert2">
+            <input class = "button2" type="submit" value="Завершить">
+        </div> 
+    </form>    
+    {% endif %}  
 <form action="/get-pdf/" method="POST">
-    <input type="submit" value="Отправить">
+    <input type="submit" value="Печать отчета">
 </form>
 </body>
 </html>
