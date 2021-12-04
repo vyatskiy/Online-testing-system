@@ -1,9 +1,9 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST, Answers
-#import pandas as pd
-#import pandas.io.sql as sqlio
-#import pdfkit as pdf
+import pandas as pd
+import pandas.io.sql as sqlio
+import pdfkit as pdf
 import psycopg2
 import os, sys, subprocess, platform
 import re
@@ -303,8 +303,7 @@ def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_ans
 
 @app.route('/get-pdf/', methods=['POST','GET'])
 def get_pdf():
-    pdf = 1
-
+    
     if platform.system() == "Windows":
             pdfkit_config = pdf.configuration(wkhtmltopdf=os.environ.get('WKHTMLTOPDF_BINARY', 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'))
     else:
