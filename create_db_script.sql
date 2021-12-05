@@ -26,3 +26,9 @@ constraint fk1 foreign key(id_test)
 
 INSERT INTO users (first_name, second_name, city, age)
 VALUES ('Test', 'Test', 'Test', 1)
+
+select u.id_user, u.first_name, u.second_name, u.city, u.age, an.id_test, an.ttype, an.q1,
+an.q2, an.q3, an.q4, an.q5
+from users u, answers an
+where u.id_user = (select max(id_user) from users)
+and u.id_user = an.id_test;

@@ -322,43 +322,57 @@ def get_pdf():
                             host=host)
     except:
         print("I am unable to connect to the database")
+    
+    report = 'report.pdf'
 
     sql_request = "select * from users \
                 where id_user = (select max(id_user) from users)"
     df = sqlio.read_sql_query(sql_request, conn)
     df.to_html('temp.html')
 
-    sql_request = "select * from answers \
-                where id_test = (select max(id_test) from answers)"
-    df2 = sqlio.read_sql_query(sql_request, conn)
-    df2.to_html('temp2.html')
+    sql_request = "select an.id_test, an.ttype, an.q1, an.q2, an.q3, \
+                    an.q4, an.q5 from answers an \
+                    where an.id_test = (select max(id_test) from answers)"
 
-    report = 'report.pdf'
+    merge_html_page(sql_request, conn)
 
-    with open('temp2.html', 'r') as t2:
-        temp2_str = t2.read()
-        t2.close()
+    for i in range(6, 9):
 
-    with open('temp.html', 'a') as t:
-        t.write('<br>')
-        t.write(temp2_str)
-        t.close()
- 
-    try: 
-        with open('logs_to_pdf.txt', 'r') as f:
-            for line in f:
-                user, key = line.split()
-            f.close()
+        sql_request = "select an.q" + str(i) + " from answers an \
+                    where an.id_test = (select max(id_test) from answers)"
 
-        client = pdfcrowd.HtmlToPdfClient(user, key)
-        client.convertFileToFile('temp.html', report)
+        merge_html_page(sql_request, conn)
 
-    except pdfcrowd.Error as why:
-        sys.stderr.write('Pdfcrowd Lib Error: {}\n'.format(why))
+    # create the API client instance 
+    # try: 
+    #     with open('logs_to_pdf.txt', 'r') as f:
+    #         for line in f:
+    #             user, key = line.split()
+    #         f.close()
+
+    #     client = pdfcrowd.HtmlToPdfClient(user, key)
+    #     client.convertFileToFile('temp.html', report)
+
+    # except pdfcrowd.Error as why:
+    #     sys.stderr.write('Pdfcrowd Lib Error: {}\n'.format(why))
     
     conn.close()
 
     return render_template('index.html')
+
+def merge_html_page(sql, conn, path='temp.html', path2='temp2.html'):
+
+    df2 = sqlio.read_sql_query(sql, conn)
+    df2.to_html(path2)
+
+    with open(path2, 'r') as t2:
+        temp2_str = t2.read()
+        t2.close()
+
+    with open(path, 'a') as t:
+        t.write('<br>')
+        t.write(temp2_str)
+        t.close()
 
 if __name__ == "__main__":
     app.run(debug=True)
