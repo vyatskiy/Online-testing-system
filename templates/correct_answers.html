@@ -1,6 +1,8 @@
 <html>
 <head background-color: salmon;>
-<title>Online testing system</title>
+    <meta charset="utf-8">
+    <title>Online testing system</title>
+    <link rel="stylesheet" href="/static/Cstyle.css">
 </head>
 <body>
 <p><h1 align="center">Результат первого этапа тестирования: {{correct}}/5</h1></p>
@@ -11,15 +13,15 @@
             <h2 align="center"> По результатам первого этапа вы набрали достаточное количество баллов для прохождения второго этапа</h2>
             <div class="alert2">
                 <p><b>1. {{SecondTaskA[0]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
-                <p><input name="FIRST" type="text"></p>
+                <p><textarea class="input_name" name="FIRST" cols="95" rows="25"></textarea></p>
             </div> 
             <div class="alert2">
                 <p><b>2. {{SecondTaskA[1]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
-                <p><input name="SECOND" type="text"></p>
+                <p><textarea class="input_name" name="SECOND" cols="95" rows="25"></textarea></p>
             </div>
             <div class="alert2">
                 <p><b>3. {{SecondTaskA[2]}}</b> <img src="https://i.gifer.com/72gi.gif" width="40" height="40"></p>
-                <p><input name="THIRD" type="text"></p>
+                <p><textarea class="input_name" name="THIRD" cols="95" rows="25"></textarea></p>
                 <input class = "button2" type="submit" value="Сохранить и завершить">
             </div>
         </div>        
@@ -27,9 +29,9 @@
     {% else %}
     <form action="/end" method="POST">
         <h2 align="center"> По результатам первого этапа вы не набрали достаточное количество баллов для прохождения второго этапа</h2>
-        <div class="alert2">
-            <input class = "button2" type="submit" value="Завершить">
-        </div> 
+        <div>
+            <input class = "button3" type="submit" value="Завершить">
+        </div>   
     </form>    
     {% endif %}  
 </body>
