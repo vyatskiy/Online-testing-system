@@ -344,17 +344,17 @@ def get_pdf():
         merge_html_page(sql_request, conn)
 
     # create the API client instance 
-    # try: 
-    #     with open('logs_to_pdf.txt', 'r') as f:
-    #         for line in f:
-    #             user, key = line.split()
-    #         f.close()
+    try: 
+        with open('logs_to_pdf.txt', 'r') as f:
+            for line in f:
+                user, key = line.split()
+            f.close()
 
-    #     client = pdfcrowd.HtmlToPdfClient(user, key)
-    #     client.convertFileToFile('temp.html', report)
+        client = pdfcrowd.HtmlToPdfClient(user, key)
+        client.convertFileToFile('temp.html', report)
 
-    # except pdfcrowd.Error as why:
-    #     sys.stderr.write('Pdfcrowd Lib Error: {}\n'.format(why))
+    except pdfcrowd.Error as why:
+        sys.stderr.write('Pdfcrowd Lib Error: {}\n'.format(why))
     
     conn.close()
 
