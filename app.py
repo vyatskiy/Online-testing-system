@@ -191,7 +191,7 @@ def save_answers():
     type = 0
     CORRECTS = 0
     if TYPE_TEST.OPEN_FORM == 0:
-        TYPE_TEST.OPEN_FORM = 1
+        TYPE_TEST.OPEN_FORM = 0
         if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
             FIRST = request.form.getlist('FIRST')
             SECOND = request.form.getlist('SECOND')
