@@ -1,11 +1,10 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
 from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST, Answers
-import pandas as pd
 import pandas.io.sql as sqlio
-import pdfkit as pdf
 import psycopg2
-import os, sys, subprocess, platform
+import pdfcrowd
+import sys
 import re
 
 app = Flask(__name__)
@@ -283,9 +282,9 @@ def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_ans
             print("I am unable to connect to the database") 
 
         curs = conn.cursor()
-        curs.execute("INSERT INTO answers (type_test, first_quest, second_quest, \
-                    third_quest, fourth_quest, fifth_quest, sixth_quest, seventh_quest, \
-                    eighth_quest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
+        curs.execute("INSERT INTO answers (ttype, q1, q2, \
+                    q3, q4, q5, q6, q7, \
+                    q8) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
                     (type, FIRST, SECOND, THIRD, FOURTH, \
                     FIFTH, sixth_answer, seventh_answer, eighth_answer))
         conn.commit()
@@ -299,25 +298,15 @@ def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_ans
         conn.close()
         f.close()
     
-
-
 @app.route('/get-pdf/', methods=['POST','GET'])
 def get_pdf():
-    
-    if platform.system() == "Windows":
-            pdfkit_config = pdf.configuration(wkhtmltopdf=os.environ.get('WKHTMLTOPDF_BINARY', 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'))
-    else:
-            os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable) 
-            WKHTMLTOPDF_CMD = subprocess.Popen(['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')], 
-                stdout=subprocess.PIPE).communicate()[0].strip()
-            print(WKHTMLTOPDF_CMD)
-            pdfkit_config = pdf.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
-    
+        
     CORRECTS = 5 
     try:
         with open('logs.txt', 'r') as f:
             for line in f:
                 dbname, user, password, host = line.split()
+            f.close()
         
         conn = psycopg2.connect(dbname=dbname, user=user, 
                             password=password,
@@ -325,16 +314,43 @@ def get_pdf():
     except:
         print("I am unable to connect to the database")
 
-    sql_request = "select * from users;"
+    sql_request = "select * from users \
+                where id_user = (select max(id_user) from users)"
     df = sqlio.read_sql_query(sql_request, conn)
     df.to_html('temp.html')
+
+    sql_request = "select * from answers \
+                where id_test = (select max(id_test) from answers)"
+    df2 = sqlio.read_sql_query(sql_request, conn)
+    df2.to_html('temp2.html')
+
     report = 'report.pdf'
-    pdf.from_file('temp.html', report, configuration=pdfkit_config)
+
+    with open('temp2.html', 'r') as t2:
+        temp2_str = t2.read()
+        t2.close()
+
+    with open('temp.html', 'a') as t:
+        t.write('<br>')
+        t.write(temp2_str)
+        t.close()
+
+    # create the API client instance 
+    # try: 
+    #     with open('logs_to_pdf.txt', 'r') as f:
+    #         for line in f:
+    #             user, key = line.split()
+    #         f.close()
+
+    #     client = pdfcrowd.HtmlToPdfClient(user, key)
+    #     client.convertFileToFile('temp.html', report)
+
+    # except pdfcrowd.Error as why:
+    #     sys.stderr.write('Pdfcrowd Lib Error: {}\n'.format(why))
     
     conn.close()
-    f.close()
 
-    return render_template('correct_answers.html', correct = CORRECTS)
+    return render_template('correct_answers.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -11,18 +11,18 @@ age int not null
 
 create table if not exists answers (
 id_test serial primary key,
-type_test int not null check(type_test > 0 and type_test < 4),
-first_quest varchar(250) not null,
-second_quest varchar(250) not null,
-third_quest varchar(250) not null,
-fourth_quest varchar(250) not null,
-fifth_quest varchar(250) not null,
-sixth_quest varchar(500),
-seventh_quest varchar(500),
-eighth_quest varchar(500),
+ttype int not null check(ttype > 0 and ttype < 4),
+q1 varchar(250) not null,
+q2 varchar(250) not null,
+q3 varchar(250) not null,
+q4 varchar(250) not null,
+q5 varchar(250) not null,
+q6 varchar(3000),
+q7 varchar(3000),
+q8 varchar(3000),
 constraint fk1 foreign key(id_test)
 	references users(id_user) on delete cascade on update cascade
 );
 
 INSERT INTO users (first_name, second_name, city, age)
-VALUES ('vasya', 'pupkin', 'kazan', 1)
+VALUES ('Test', 'Test', 'Test', 1)
