@@ -301,7 +301,6 @@ def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_ans
 @app.route('/get-pdf/', methods=['POST','GET'])
 def get_pdf():
         
-    CORRECTS = 5 
     try:
         with open('logs.txt', 'r') as f:
             for line in f:
@@ -334,23 +333,22 @@ def get_pdf():
         t.write('<br>')
         t.write(temp2_str)
         t.close()
+ 
+    try: 
+        with open('logs_to_pdf.txt', 'r') as f:
+            for line in f:
+                user, key = line.split()
+            f.close()
 
-    # create the API client instance 
-    # try: 
-    #     with open('logs_to_pdf.txt', 'r') as f:
-    #         for line in f:
-    #             user, key = line.split()
-    #         f.close()
+        client = pdfcrowd.HtmlToPdfClient(user, key)
+        client.convertFileToFile('temp.html', report)
 
-    #     client = pdfcrowd.HtmlToPdfClient(user, key)
-    #     client.convertFileToFile('temp.html', report)
-
-    # except pdfcrowd.Error as why:
-    #     sys.stderr.write('Pdfcrowd Lib Error: {}\n'.format(why))
+    except pdfcrowd.Error as why:
+        sys.stderr.write('Pdfcrowd Lib Error: {}\n'.format(why))
     
     conn.close()
 
-    return render_template('correct_answers.html')
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
