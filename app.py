@@ -219,26 +219,36 @@ def save_answers():
                 type = 2
                 if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
                     CORRECTS += 1    
+                    Answers.FIRST = FIRST
                 if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
                     CORRECTS += 1
+                    Answers.SECOND = SECOND
                 if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
                     CORRECTS += 1
+                    Answers.THIRD = THIRD
                 if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
                     CORRECTS += 1
-                if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
+                    Answers.FOURTH = FOURTH
+                if FIFTH == QAAnswers.CORRECT_ANSWER_QA5:
                     CORRECTS += 1 
+                    Answers.FIVE = FIFTH
             if type_test == 'Analitix':
                 type = 3
                 if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
                     CORRECTS += 1    
+                    Answers.FIRST = FIRST
                 if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
                     CORRECTS += 1
+                    Answers.SECOND = SECOND
                 if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
                     CORRECTS += 1
+                    Answers.THIRD = THIRD
                 if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
                     CORRECTS += 1
+                    Answers.FOURTH = FOURTH
                 if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
                     CORRECTS += 1   
+                    Answers.FIVE = FIFTH
 
             if CORRECTS >= 4 :
                 type_test = type_test + 'SECOND'
