@@ -2,6 +2,6 @@
 #logs.txt
 #logs_to_pdf.txt
 __pycache__/*
-#temp.html
+temp.html
 temp2.html
 report.pdf
