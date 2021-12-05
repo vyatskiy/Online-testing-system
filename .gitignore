@@ -1,3 +1,12 @@
 .venv/*
+<<<<<<< HEAD
 logs.txt
 .__pycache__/*
+=======
+#logs.txt
+#logs_to_pdf.txt
+__pycache__/*
+temp.html
+temp2.html
+report.pdf
+>>>>>>> ffc59d467c504796f2746b4f50cabf402b982ea0

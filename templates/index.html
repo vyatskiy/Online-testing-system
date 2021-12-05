@@ -35,6 +35,12 @@
         <div class="flash {{cat}}">{{msg}}</div>
         {% endfor %}
       </form>  
+      {% if printR %}  
+      <form action="/get-pdf/" method="POST">
+        <div> </div>
+        <input class = "button2" type="submit" value="Печать отчета">
+    </form>
+    {% endif %}  
   </div>     
   {% if data %}   
 </span>    

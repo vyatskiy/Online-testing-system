@@ -1,7 +1,10 @@
 from flask import Flask, request, render_template, redirect, flash
 from questions import QAquestions, AnalitixQuestions, DevelopersQuestions
-from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST
+from answers import AnalitixAnswer, QAAnswers, DeveloperAnswer, TYPE_TEST, Answers
+import pandas.io.sql as sqlio
 import psycopg2
+import pdfcrowd
+import sys
 import re
 
 app = Flask(__name__)
@@ -11,6 +14,7 @@ questions = [0] * 5
 answersA = [0] * 5
 answersB = [0] * 5
 answersC = [0] * 5
+SecondTaskA = [0] * 3
 @app.route('/')
 def hello():
     return render_template('index.html')
@@ -139,6 +143,7 @@ def save():
         curs.execute("INSERT INTO users (first_name, second_name, city, age) \
             VALUES (%s, %s, %s, %s)", (first_name, second_name, city, year))
         conn.commit()
+        TYPE_TEST.OPEN_FORM = 0
 
         # curs.execute("select * from users")
         # records = curs.fetchall()
@@ -151,6 +156,33 @@ def save():
  
     return render_template('index.html', data = data)
 
+@app.route('/end_and_save', methods=['POST','GET'])
+def end_and_save():
+    type_test = TYPE_TEST.type_test 
+    print(type_test)
+    type = 0
+    data = True
+    if type_test == 'DeveloperSECOND':
+        type = 1
+    if type_test == 'TesterSECOND':
+        type = 2
+    if type_test == 'AnalitixSECOND':
+        type = 3                                
+    sixth_answer = request.form['FIRST']
+    seventh_answer = request.form['SECOND']  
+    eighth_answer = request.form['THIRD']  
+    insert_answers_bd(type, data, Answers.FIRST, Answers.SECOND, Answers.THIRD,
+                Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)     
+    flash('Ответы сохранены, благодарим Вас', category='success')               
+    printResults = True
+    return render_template('index.html', printR = printResults)
+
+@app.route('/end', methods=['POST','GET'])
+def end():   
+    flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error') 
+    printResults = True
+    return render_template('index.html', printR = printResults)
+
 
 @app.route('/save_answers', methods=['POST','GET'])
 def save_answers():
@@ -158,54 +190,86 @@ def save_answers():
     type_test = TYPE_TEST.type_test
     type = 0
     CORRECTS = 0
-    FIRST = request.form.getlist('FIRST')
-    SECOND = request.form.getlist('SECOND')
-    THIRD = request.form.getlist('THIRD')
-    FOURTH = request.form.getlist('FOURTH')
-    FIFTH = request.form.getlist('FIFTH') 
-    if type_test == 'Developer':
-        type = 1
-        if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
-            CORRECTS += 1    
-        if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
-            CORRECTS += 1
-        if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
-            CORRECTS += 1
-        if FOURTH == DeveloperAnswer.CORRECT_ANSWER_D4:
-            CORRECTS += 1
-        if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
-            CORRECTS += 1     
-    if type_test == 'Tester':
-        type = 2
-        if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
-            CORRECTS += 1    
-        if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
-            CORRECTS += 1
-        if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
-            CORRECTS += 1
-        if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
-            CORRECTS += 1
-        if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
-            CORRECTS += 1 
-    if type_test == 'Analitix':
-        type = 3
-        if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
-            CORRECTS += 1    
-        if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
-            CORRECTS += 1
-        if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
-            CORRECTS += 1
-        if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
-            CORRECTS += 1
-        if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
-            CORRECTS += 1                            
+    if TYPE_TEST.OPEN_FORM == 0:
+        TYPE_TEST.OPEN_FORM = 1
+        if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
+            FIRST = request.form.getlist('FIRST')
+            SECOND = request.form.getlist('SECOND')
+            THIRD = request.form.getlist('THIRD')
+            FOURTH = request.form.getlist('FOURTH')
+            FIFTH = request.form.getlist('FIFTH') 
+            if type_test == 'Developer':
+                type = 1
+                if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
+                    CORRECTS += 1 
+                    Answers.FIRST = FIRST
+                if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
+                    CORRECTS += 1
+                    Answers.SECOND = SECOND
+                if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
+                    CORRECTS += 1
+                    Answers.THIRD = THIRD
+                if FOURTH == DeveloperAnswer.CORRECT_ANSWER_D4:
+                    CORRECTS += 1
+                    Answers.FOURTH = FOURTH
+                if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
+                    CORRECTS += 1     
+                    Answers.FIVE = FIFTH
+            if type_test == 'Tester':
+                type = 2
+                if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
+                    CORRECTS += 1    
+                if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
+                    CORRECTS += 1
+                if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
+                    CORRECTS += 1
+                if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
+                    CORRECTS += 1
+                if FIFTH == QAAnswers.CORRECT_ANSWER_QA4:
+                    CORRECTS += 1 
+            if type_test == 'Analitix':
+                type = 3
+                if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
+                    CORRECTS += 1    
+                if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
+                    CORRECTS += 1
+                if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
+                    CORRECTS += 1
+                if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+                    CORRECTS += 1
+                if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+                    CORRECTS += 1   
 
-    sixth_answer = ''
-    seventh_answer = ''
-    eighth_answer = ''
+            if CORRECTS >= 4 :
+                type_test = type_test + 'SECOND'
+                TYPE_TEST.type_test = type_test
+                if type_test == 'DeveloperSECOND':
+                    SecondTaskA[0] = DevelopersQuestions.DS1  
+                    SecondTaskA[1] = DevelopersQuestions.DS2    
+                    SecondTaskA[2] = DevelopersQuestions.DS3  
+                if type_test == 'TesterSECOND':
+                    SecondTaskA[0] = QAquestions.QS1  
+                    SecondTaskA[1] = QAquestions.QS2   
+                    SecondTaskA[2] = QAquestions.QS3
+                if type_test == 'AnalitixSECOND':
+                    SecondTaskA[0] = AnalitixQuestions.AS1 
+                    SecondTaskA[1] = AnalitixQuestions.AS2    
+                    SecondTaskA[2] = AnalitixQuestions.AS3          
+                return render_template('correct_answers.html', correct = CORRECTS, SecondTaskA = SecondTaskA)
+            else:
+                sixth_answer = ''
+                seventh_answer = ''
+                eighth_answer = ''
+                insert_answers_bd(type, data, FIRST, SECOND, THIRD,
+                FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
 
+                return render_template('correct_answers.html', correct = CORRECTS)
+    else:
+        flash("Ошибка: попытка повторного прохождения теста!", category='error')    
+        return render_template('index.html')            
+
+def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer):
     if data:
-        flash('Ответы сохранены, благодарим Вас', category='success')
         try:
             with open('logs.txt', 'r') as f:
                 for line in f:
@@ -218,23 +282,75 @@ def save_answers():
             print("I am unable to connect to the database") 
 
         curs = conn.cursor()
-        curs.execute("INSERT INTO answers (type_test, first_quest, second_quest, \
-                    third_quest, fourth_quest, fifth_quest, sixth_quest, seventh_quest, \
-                    eighth_quest) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
+        curs.execute("INSERT INTO answers (ttype, q1, q2, \
+                    q3, q4, q5, q6, q7, \
+                    q8) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", \
                     (type, FIRST, SECOND, THIRD, FOURTH, \
                     FIFTH, sixth_answer, seventh_answer, eighth_answer))
         conn.commit()
 
-        # curs.execute("select * from users")
-        # records = curs.fetchall()
-        # for row in records:
-        #     print(row)
+        curs.execute("select * from answers")
+        records = curs.fetchall()
+        for row in records:
+            print(row)
         
         curs.close()
         conn.close()
         f.close()
+    
+@app.route('/get-pdf/', methods=['POST','GET'])
+def get_pdf():
+        
+    CORRECTS = 5 
+    try:
+        with open('logs.txt', 'r') as f:
+            for line in f:
+                dbname, user, password, host = line.split()
+            f.close()
+        
+        conn = psycopg2.connect(dbname=dbname, user=user, 
+                            password=password,
+                            host=host)
+    except:
+        print("I am unable to connect to the database")
 
-    return render_template('correct_answers.html', correct = CORRECTS)
+    sql_request = "select * from users \
+                where id_user = (select max(id_user) from users)"
+    df = sqlio.read_sql_query(sql_request, conn)
+    df.to_html('temp.html')
+
+    sql_request = "select * from answers \
+                where id_test = (select max(id_test) from answers)"
+    df2 = sqlio.read_sql_query(sql_request, conn)
+    df2.to_html('temp2.html')
+
+    report = 'report.pdf'
+
+    with open('temp2.html', 'r') as t2:
+        temp2_str = t2.read()
+        t2.close()
+
+    with open('temp.html', 'a') as t:
+        t.write('<br>')
+        t.write(temp2_str)
+        t.close()
+
+    # create the API client instance 
+    # try: 
+    #     with open('logs_to_pdf.txt', 'r') as f:
+    #         for line in f:
+    #             user, key = line.split()
+    #         f.close()
+
+    #     client = pdfcrowd.HtmlToPdfClient(user, key)
+    #     client.convertFileToFile('temp.html', report)
+
+    # except pdfcrowd.Error as why:
+    #     sys.stderr.write('Pdfcrowd Lib Error: {}\n'.format(why))
+    
+    conn.close()
+
+    return render_template('correct_answers.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
