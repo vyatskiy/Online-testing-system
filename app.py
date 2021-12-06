@@ -105,6 +105,7 @@ def save():
     Answers.surname = second_name
     Answers.city = city
     Answers.age = year 
+    TYPE_TEST.OPEN_FORM = 0
 
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
         data = False
@@ -128,13 +129,13 @@ def save():
     elif re.search(r'\D', year) != None or len(year) > 3:
         data = False
         flash('Поле Возраст заполненно некорректно', category='error')
+    else:
+        flash('Данные сохранены', category='success')  
 
     return render_template('index.html', data = data)
 
 def insert_data(data, first_name, second_name, city, year):
     if data:
-        flash('Данные сохранены', category='success')  
-
         try:
             with open('logs.txt', 'r') as f:
                 for line in f:
@@ -150,7 +151,6 @@ def insert_data(data, first_name, second_name, city, year):
         curs.execute("INSERT INTO users (first_name, second_name, city, age) \
             VALUES (%s, %s, %s, %s)", (first_name, second_name, city, year))
         conn.commit()
-        TYPE_TEST.OPEN_FORM = 0
 
         # curs.execute("select * from users")
         # records = curs.fetchall()
@@ -253,7 +253,7 @@ def save_answers():
                 if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
                     CORRECTS += 1
                     Answers.FOURTH = FOURTH
-                if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+                if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A5:
                     CORRECTS += 1   
                     Answers.FIVE = FIFTH
 
@@ -373,11 +373,11 @@ def merge_html_page(sql, conn, path='temp.html', path2='temp2.html'):
     df2 = sqlio.read_sql_query(sql, conn)
     df2.to_html(path2)
 
-    with open(path2, 'r') as t2:
+    with open(path2, 'r', encoding='utf-8') as t2:
         temp2_str = t2.read()
         t2.close()
 
-    with open(path, 'a') as t:
+    with open(path, 'a', encoding='utf-8') as t:
         t.write('<br>')
         t.write(temp2_str)
         t.close()
