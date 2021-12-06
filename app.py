@@ -165,7 +165,6 @@ def insert_data(data, first_name, second_name, city, year):
 @app.route('/end_and_save', methods=['POST','GET'])
 def end_and_save():
     type_test = TYPE_TEST.type_test 
-    print(type_test)
     type = 0
     data = True
     if type_test == 'DeveloperSECOND':
@@ -187,9 +186,9 @@ def end_and_save():
     return render_template('index.html', printR = printResults)
 
 @app.route('/end', methods=['POST','GET'])
-def end():   
-    TYPE_TEST.type_test = 'None'
-    flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error') 
+def end():
+    TYPE_TEST.OPEN_FORM = 0
+    flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error')
     printResults = True
     return render_template('index.html', printR = printResults)
 
@@ -263,6 +262,7 @@ def save_answers():
             if CORRECTS >= 4 :
                 type_test = type_test + 'SECOND'
                 TYPE_TEST.type_test = type_test
+                TYPE_TEST.OPEN_FORM = 0
                 if type_test == 'DeveloperSECOND':
                     SecondTaskA[0] = DevelopersQuestions.DS1  
                     SecondTaskA[1] = DevelopersQuestions.DS2    
@@ -284,6 +284,7 @@ def save_answers():
                 insert_answers_bd(type, data, FIRST, SECOND, THIRD,
                 FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
 
+                TYPE_TEST.type_test = 'None'
                 return render_template('correct_answers.html', correct = CORRECTS)
     else:
         flash("Ошибка: попытка повторного прохождения теста!", category='error')    
