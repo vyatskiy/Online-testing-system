@@ -88,3 +88,7 @@ class Answers:
     THIRD = 'None'
     FOURTH = 'None'
     FIVE = 'None'
+    name = 'None'
+    surname = 'None'
+    age = 'None'
+    city = 'None'

@@ -100,7 +100,11 @@ def save():
     first_name = request.form['firstname']
     second_name = request.form['secondname']  
     city = request.form['city']  
-    year = request.form['year']  
+    year = request.form['year'] 
+    Answers.name = first_name
+    Answers.surname = second_name
+    Answers.city = city
+    Answers.age = year 
 
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
         data = False
@@ -125,7 +129,10 @@ def save():
         data = False
         flash('Поле Возраст заполненно некорректно', category='error')
 
-    elif data:
+    return render_template('index.html', data = data)
+
+def insert_data(data, first_name, second_name, city, year):
+    if data:
         flash('Данные сохранены', category='success')  
 
         try:
@@ -153,8 +160,7 @@ def save():
         curs.close()
         conn.close()
         f.close()
- 
-    return render_template('index.html', data = data)
+
 
 @app.route('/end_and_save', methods=['POST','GET'])
 def end_and_save():
@@ -171,6 +177,7 @@ def end_and_save():
     sixth_answer = request.form['FIRST']
     seventh_answer = request.form['SECOND']  
     eighth_answer = request.form['THIRD']  
+    insert_data(data, Answers.name, Answers.surname, Answers.city, Answers.age)
     insert_answers_bd(type, data, Answers.FIRST, Answers.SECOND, Answers.THIRD,
                 Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)     
     flash('Ответы сохранены, благодарим Вас', category='success')               
@@ -191,7 +198,7 @@ def save_answers():
     type = 0
     CORRECTS = 0
     if TYPE_TEST.OPEN_FORM == 0:
-        TYPE_TEST.OPEN_FORM = 0
+        TYPE_TEST.OPEN_FORM = 1
         if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
             FIRST = request.form.getlist('FIRST')
             SECOND = request.form.getlist('SECOND')
@@ -270,6 +277,7 @@ def save_answers():
                 sixth_answer = ''
                 seventh_answer = ''
                 eighth_answer = ''
+                insert_data(True, Answers.name, Answers.surname, Answers.city, Answers.age)
                 insert_answers_bd(type, data, FIRST, SECOND, THIRD,
                 FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
 
