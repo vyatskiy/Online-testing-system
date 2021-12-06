@@ -179,13 +179,16 @@ def end_and_save():
     eighth_answer = request.form['THIRD']  
     insert_data(data, Answers.name, Answers.surname, Answers.city, Answers.age)
     insert_answers_bd(type, data, Answers.FIRST, Answers.SECOND, Answers.THIRD,
-                Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)     
+                Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)  
+    TYPE_TEST.type_test = 'None'
+       
     flash('Ответы сохранены, благодарим Вас', category='success')               
     printResults = True
     return render_template('index.html', printR = printResults)
 
 @app.route('/end', methods=['POST','GET'])
 def end():   
+    TYPE_TEST.type_test = 'None'
     flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error') 
     printResults = True
     return render_template('index.html', printR = printResults)
