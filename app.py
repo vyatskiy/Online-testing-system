@@ -213,7 +213,7 @@ def save_answers():
     """
     data = True
     type_test = TYPE_TEST.type_test
-    type = 0
+    type = None
     CORRECTS = 0
     if TYPE_TEST.OPEN_FORM == 0:
         if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
@@ -298,7 +298,7 @@ def save_answers():
                 insert_data(True, Answers.name, Answers.surname, Answers.city, Answers.age)
                 insert_answers_bd(type, data, FIRST, SECOND, THIRD,
                 FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
-                TYPE_TEST.OPEN_FORM == 0
+                TYPE_TEST.OPEN_FORM == 1
                 TYPE_TEST.type_test = 'None'
                 return render_template('correct_answers.html', correct = CORRECTS)
     else:
