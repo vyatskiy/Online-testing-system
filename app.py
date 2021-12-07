@@ -293,9 +293,9 @@ def save_answers():
                 TYPE_TEST.OPEN_FORM == 1
                 TYPE_TEST.type_test = 'None'
                 return render_template('correct_answers.html', correct = CORRECTS)
-    else:
-        flash("Ошибка: попытка повторного прохождения теста!", category='error')    
-        return render_template('index.html')            
+
+    flash("Ошибка: попытка повторного прохождения теста!", category='error')    
+    return render_template('index.html')            
 
 def insert_answers_bd(data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer):
     """Метод для сохранения ответов в базу данных
