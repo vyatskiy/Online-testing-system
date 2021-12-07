@@ -43,7 +43,8 @@ def developer():
     answersC[1] = DeveloperAnswer.C2    
     answersC[2] = DeveloperAnswer.C3 
     answersC[3] = DeveloperAnswer.C4 
-    answersC[4] = DeveloperAnswer.C5                
+    answersC[4] = DeveloperAnswer.C5         
+    TYPE_TEST.OPEN_FORM = 0       
     return render_template('developer.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
 @app.route('/tester/', methods=['POST','GET'])
@@ -70,7 +71,8 @@ def tester():
     answersC[1] = QAAnswers.C2    
     answersC[2] = QAAnswers.C3 
     answersC[3] = QAAnswers.C4 
-    answersC[4] = QAAnswers.C5  
+    answersC[4] = QAAnswers.C5 
+    TYPE_TEST.OPEN_FORM = 0 
     return render_template('tester.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
 @app.route('/analitix/', methods=['POST','GET'])
@@ -98,6 +100,7 @@ def analite():
     answersC[2] = AnalitixAnswer.C3 
     answersC[3] = AnalitixAnswer.C4 
     answersC[4] = AnalitixAnswer.C5  
+    TYPE_TEST.OPEN_FORM = 0
     return render_template('analitix.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
 @app.route('/save', methods=['POST','GET'])
@@ -185,7 +188,8 @@ def end_and_save():
                 Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)  
     TYPE_TEST.type_test = 'None'
        
-    flash('Ответы сохранены, благодарим Вас', category='success')               
+    flash('Ответы сохранены, благодарим Вас', category='success')  
+    TYPE_TEST.OPEN_FORM = 0             
     printResults = True
     return render_template('index.html', printR = printResults)
 
