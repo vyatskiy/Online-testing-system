@@ -301,11 +301,11 @@ def insert_answers_bd(data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, s
     """Метод для сохранения ответов в базу данных
     """
     type = 0
-    if TYPE_TEST == 'Developer' or TYPE_TEST == 'DeveloperSECOND':
+    if TYPE_TEST.type_test == 'Developer' or TYPE_TEST.type_test == 'DeveloperSECOND':
         type = 1
-    if TYPE_TEST == 'Tester' or TYPE_TEST == 'TesterSECOND':
+    if TYPE_TEST.type_test == 'Tester' or TYPE_TEST.type_test == 'TesterSECOND':
         type = 2
-    if TYPE_TEST == 'Analitix' or TYPE_TEST == 'AnalitixSECOND':
+    if TYPE_TEST.type_test == 'Analitix' or TYPE_TEST .type_test== 'AnalitixSECOND':
         type = 3           
     if data:
         try:
