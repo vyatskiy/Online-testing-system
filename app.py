@@ -113,6 +113,7 @@ def save():
     Answers.surname = second_name
     Answers.city = city
     Answers.age = year 
+    TYPE_TEST.OPEN_FORM = 0
 
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
         data = False
@@ -136,6 +137,8 @@ def save():
     elif re.search(r'\D', year) != None or len(year) > 3:
         data = False
         flash('Поле Возраст заполненно некорректно', category='error')
+    else:
+        flash('Данные сохранены', category='success')  
 
     return render_template('index.html', data = data)
 
@@ -143,8 +146,6 @@ def insert_data(data, first_name, second_name, city, year):
     """Метод для записи данных пользователей в базу данных
     """
     if data:
-        flash('Данные сохранены', category='success')  
-
         try:
             with open('logs.txt', 'r') as f:
                 for line in f:
@@ -160,7 +161,6 @@ def insert_data(data, first_name, second_name, city, year):
         curs.execute("INSERT INTO users (first_name, second_name, city, age) \
             VALUES (%s, %s, %s, %s)", (first_name, second_name, city, year))
         conn.commit()
-        TYPE_TEST.OPEN_FORM = 0
 
         # curs.execute("select * from users")
         # records = curs.fetchall()
@@ -177,7 +177,6 @@ def end_and_save():
     """Метод для сохранения ответов второй части тестирования
     """
     type_test = TYPE_TEST.type_test 
-    print(type_test)
     type = 0
     data = True
     if type_test == 'DeveloperSECOND':
@@ -191,16 +190,19 @@ def end_and_save():
     eighth_answer = request.form['THIRD']  
     insert_data(data, Answers.name, Answers.surname, Answers.city, Answers.age)
     insert_answers_bd(type, data, Answers.FIRST, Answers.SECOND, Answers.THIRD,
-                Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)     
+                Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)  
+    TYPE_TEST.type_test = 'None'
+       
     flash('Ответы сохранены, благодарим Вас', category='success')               
     printResults = True
     return render_template('index.html', printR = printResults)
 
 @app.route('/end', methods=['POST','GET'])
-def end():   
+def end():
     """Метод для выхода в главное меню, в случае недостаточного количества баллов
     """
-    flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error') 
+    TYPE_TEST.OPEN_FORM = 0
+    flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error')
     printResults = True
     return render_template('index.html', printR = printResults)
 
@@ -268,13 +270,14 @@ def save_answers():
                 if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
                     CORRECTS += 1
                     Answers.FOURTH = FOURTH
-                if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+                if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A5:
                     CORRECTS += 1   
                     Answers.FIVE = FIFTH
 
             if CORRECTS >= 4 :
                 type_test = type_test + 'SECOND'
                 TYPE_TEST.type_test = type_test
+                TYPE_TEST.OPEN_FORM = 0
                 if type_test == 'DeveloperSECOND':
                     SecondTaskA[0] = DevelopersQuestions.DS1  
                     SecondTaskA[1] = DevelopersQuestions.DS2    
@@ -295,7 +298,8 @@ def save_answers():
                 insert_data(True, Answers.name, Answers.surname, Answers.city, Answers.age)
                 insert_answers_bd(type, data, FIRST, SECOND, THIRD,
                 FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
-                TYPE_TEST.OPEN_FORM = 1
+
+                TYPE_TEST.type_test = 'None'
                 return render_template('correct_answers.html', correct = CORRECTS)
     else:
         flash("Ошибка: попытка повторного прохождения теста!", category='error')    
@@ -391,11 +395,11 @@ def merge_html_page(sql, conn, path='temp.html', path2='temp2.html'):
     df2 = sqlio.read_sql_query(sql, conn)
     df2.to_html(path2)
 
-    with open(path2, 'r') as t2:
+    with open(path2, 'r', encoding='utf-8') as t2:
         temp2_str = t2.read()
         t2.close()
 
-    with open(path, 'a') as t:
+    with open(path, 'a', encoding='utf-8') as t:
         t.write('<br>')
         t.write(temp2_str)
         t.close()
