@@ -176,8 +176,6 @@ def insert_data(data, first_name, second_name, city, year):
 def end_and_save():
     """Метод для сохранения ответов второй части тестирования
     """
-    type_test = TYPE_TEST.type_test 
-    type = 0
     data = True                               
     sixth_answer = request.form['FIRST']
     seventh_answer = request.form['SECOND']  
@@ -302,13 +300,13 @@ def save_answers():
 def insert_answers_bd(data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer):
     """Метод для сохранения ответов в базу данных
     """
+    type = 0
     if TYPE_TEST == 'Developer' or TYPE_TEST == 'DeveloperSECOND':
         type = 1
     if TYPE_TEST == 'Tester' or TYPE_TEST == 'TesterSECOND':
         type = 2
     if TYPE_TEST == 'Analitix' or TYPE_TEST == 'AnalitixSECOND':
         type = 3           
-
     if data:
         try:
             with open('logs.txt', 'r') as f:
