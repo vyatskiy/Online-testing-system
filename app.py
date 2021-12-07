@@ -178,18 +178,12 @@ def end_and_save():
     """
     type_test = TYPE_TEST.type_test 
     type = 0
-    data = True
-    if type_test == 'DeveloperSECOND':
-        type = 1
-    if type_test == 'TesterSECOND':
-        type = 2
-    if type_test == 'AnalitixSECOND':
-        type = 3                                
+    data = True                               
     sixth_answer = request.form['FIRST']
     seventh_answer = request.form['SECOND']  
     eighth_answer = request.form['THIRD']  
     insert_data(data, Answers.name, Answers.surname, Answers.city, Answers.age)
-    insert_answers_bd(type, data, Answers.FIRST, Answers.SECOND, Answers.THIRD,
+    insert_answers_bd(data, Answers.FIRST, Answers.SECOND, Answers.THIRD,
                 Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)  
     TYPE_TEST.type_test = 'None'
        
@@ -296,7 +290,7 @@ def save_answers():
                 seventh_answer = ''
                 eighth_answer = ''
                 insert_data(True, Answers.name, Answers.surname, Answers.city, Answers.age)
-                insert_answers_bd(type, data, FIRST, SECOND, THIRD,
+                insert_answers_bd(data, FIRST, SECOND, THIRD,
                 FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
                 TYPE_TEST.OPEN_FORM == 1
                 TYPE_TEST.type_test = 'None'
@@ -305,9 +299,16 @@ def save_answers():
         flash("Ошибка: попытка повторного прохождения теста!", category='error')    
         return render_template('index.html')            
 
-def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer):
+def insert_answers_bd(data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer):
     """Метод для сохранения ответов в базу данных
     """
+    if TYPE_TEST == 'Developer' or TYPE_TEST == 'DeveloperSECOND':
+        type = 1
+    if TYPE_TEST == 'Tester' or TYPE_TEST == 'TesterSECOND':
+        type = 2
+    if TYPE_TEST == 'Analitix' or TYPE_TEST == 'AnalitixSECOND':
+        type = 3           
+
     if data:
         try:
             with open('logs.txt', 'r') as f:
