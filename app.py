@@ -21,6 +21,8 @@ def hello():
 
 @app.route('/developer/', methods=['POST','GET'])
 def developer():
+    """Метод для загрузки вопросов и ответов для Разработчика
+    """
     TYPE_TEST.type_test = 'Developer'
     questions[0] = DevelopersQuestions.D1
     questions[1] = DevelopersQuestions.D2
@@ -46,6 +48,8 @@ def developer():
 
 @app.route('/tester/', methods=['POST','GET'])
 def tester():
+    """Метод для загрузки вопросов и ответов для Тестировщика
+    """
     TYPE_TEST.type_test = 'Tester'
     questions[0] = QAquestions.Q1
     questions[1] = QAquestions.Q2
@@ -71,6 +75,8 @@ def tester():
 
 @app.route('/analitix/', methods=['POST','GET'])
 def analite():
+    """Метод для загрузки вопросов и ответов для Аналитика
+    """
     TYPE_TEST.type_test = 'Analitix'    
     questions[0] = AnalitixQuestions.A1
     questions[1] = AnalitixQuestions.A2
@@ -96,6 +102,8 @@ def analite():
 
 @app.route('/save', methods=['POST','GET'])
 def save():
+    """Метод для сохранения данных пользователя, проверки с помощью регулярных выражений
+    """
     data = True
     first_name = request.form['firstname']
     second_name = request.form['secondname']  
@@ -132,6 +140,8 @@ def save():
     return render_template('index.html', data = data)
 
 def insert_data(data, first_name, second_name, city, year):
+    """Метод для записи данных пользователей в базу данных
+    """
     if data:
         flash('Данные сохранены', category='success')  
 
@@ -164,6 +174,8 @@ def insert_data(data, first_name, second_name, city, year):
 
 @app.route('/end_and_save', methods=['POST','GET'])
 def end_and_save():
+    """Метод для сохранения ответов второй части тестирования
+    """
     type_test = TYPE_TEST.type_test 
     print(type_test)
     type = 0
@@ -186,6 +198,8 @@ def end_and_save():
 
 @app.route('/end', methods=['POST','GET'])
 def end():   
+    """Метод для выхода в главное меню, в случае недостаточного количества баллов
+    """
     flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error') 
     printResults = True
     return render_template('index.html', printR = printResults)
@@ -193,12 +207,13 @@ def end():
 
 @app.route('/save_answers', methods=['POST','GET'])
 def save_answers():
+    """Метод для сохранения ответов первой части, отображения вопросов для второй
+    """
     data = True
     type_test = TYPE_TEST.type_test
     type = 0
     CORRECTS = 0
     if TYPE_TEST.OPEN_FORM == 0:
-        TYPE_TEST.OPEN_FORM = 1
         if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
             FIRST = request.form.getlist('FIRST')
             SECOND = request.form.getlist('SECOND')
@@ -280,13 +295,15 @@ def save_answers():
                 insert_data(True, Answers.name, Answers.surname, Answers.city, Answers.age)
                 insert_answers_bd(type, data, FIRST, SECOND, THIRD,
                 FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
-
+                TYPE_TEST.OPEN_FORM = 1
                 return render_template('correct_answers.html', correct = CORRECTS)
     else:
         flash("Ошибка: попытка повторного прохождения теста!", category='error')    
         return render_template('index.html')            
 
 def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer):
+    """Метод для сохранения ответов в базу данных
+    """
     if data:
         try:
             with open('logs.txt', 'r') as f:
@@ -318,7 +335,8 @@ def insert_answers_bd(type, data, FIRST, SECOND, THIRD, FOURTH, FIFTH, sixth_ans
     
 @app.route('/get-pdf/', methods=['POST','GET'])
 def get_pdf():
-        
+    """Метод для формирования и выгрузки pdf-файла
+    """        
     try:
         with open('logs.txt', 'r') as f:
             for line in f:
