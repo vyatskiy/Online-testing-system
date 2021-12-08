@@ -43,8 +43,7 @@ def developer():
     answersC[1] = DeveloperAnswer.C2    
     answersC[2] = DeveloperAnswer.C3 
     answersC[3] = DeveloperAnswer.C4 
-    answersC[4] = DeveloperAnswer.C5         
-    TYPE_TEST.OPEN_FORM = 0       
+    answersC[4] = DeveloperAnswer.C5                
     return render_template('developer.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
 @app.route('/tester/', methods=['POST','GET'])
@@ -72,7 +71,6 @@ def tester():
     answersC[2] = QAAnswers.C3 
     answersC[3] = QAAnswers.C4 
     answersC[4] = QAAnswers.C5 
-    TYPE_TEST.OPEN_FORM = 0 
     return render_template('tester.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
 @app.route('/analitix/', methods=['POST','GET'])
@@ -100,7 +98,6 @@ def analite():
     answersC[2] = AnalitixAnswer.C3 
     answersC[3] = AnalitixAnswer.C4 
     answersC[4] = AnalitixAnswer.C5  
-    TYPE_TEST.OPEN_FORM = 0
     return render_template('analitix.html', questions = questions, answersA = answersA, answersB = answersB, answersC = answersC)
 
 @app.route('/save', methods=['POST','GET'])
@@ -116,7 +113,6 @@ def save():
     Answers.surname = second_name
     Answers.city = city
     Answers.age = year 
-    TYPE_TEST.OPEN_FORM = 0
 
     if (first_name  == '') or (second_name == '') or (city == '') or (year ==''):
         data = False
@@ -188,8 +184,7 @@ def end_and_save():
                 Answers.FOURTH, Answers.FIVE, sixth_answer, seventh_answer, eighth_answer)  
     TYPE_TEST.type_test = 'None'
        
-    flash('Ответы сохранены, благодарим Вас', category='success')  
-    TYPE_TEST.OPEN_FORM = 0             
+    flash('Ответы сохранены, благодарим Вас', category='success')            
     printResults = True
     return render_template('index.html', printR = printResults)
 
@@ -197,7 +192,6 @@ def end_and_save():
 def end():
     """Метод для выхода в главное меню, в случае недостаточного количества баллов
     """
-    TYPE_TEST.OPEN_FORM = 0
     flash('Вы не смогли пройти тестирование! Попробуйте снова!', category='error')
     printResults = True
     return render_template('index.html', printR = printResults)
@@ -211,92 +205,89 @@ def save_answers():
     type_test = TYPE_TEST.type_test
     type = None
     CORRECTS = 0
-    if TYPE_TEST.OPEN_FORM == 0:
-        if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
-            FIRST = request.form.getlist('FIRST')
-            SECOND = request.form.getlist('SECOND')
-            THIRD = request.form.getlist('THIRD')
-            FOURTH = request.form.getlist('FOURTH')
-            FIFTH = request.form.getlist('FIFTH') 
-            if type_test == 'Developer':
-                type = 1
-                if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
-                    CORRECTS += 1 
-                    Answers.FIRST = FIRST
-                if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
-                    CORRECTS += 1
-                    Answers.SECOND = SECOND
-                if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
-                    CORRECTS += 1
-                    Answers.THIRD = THIRD
-                if FOURTH == DeveloperAnswer.CORRECT_ANSWER_D4:
-                    CORRECTS += 1
-                    Answers.FOURTH = FOURTH
-                if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
-                    CORRECTS += 1     
-                    Answers.FIVE = FIFTH
-            if type_test == 'Tester':
-                type = 2
-                if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
-                    CORRECTS += 1    
-                    Answers.FIRST = FIRST
-                if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
-                    CORRECTS += 1
-                    Answers.SECOND = SECOND
-                if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
-                    CORRECTS += 1
-                    Answers.THIRD = THIRD
-                if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
-                    CORRECTS += 1
-                    Answers.FOURTH = FOURTH
-                if FIFTH == QAAnswers.CORRECT_ANSWER_QA5:
-                    CORRECTS += 1 
-                    Answers.FIVE = FIFTH
-            if type_test == 'Analitix':
-                type = 3
-                if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
-                    CORRECTS += 1    
-                    Answers.FIRST = FIRST
-                if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
-                    CORRECTS += 1
-                    Answers.SECOND = SECOND
-                if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
-                    CORRECTS += 1
-                    Answers.THIRD = THIRD
-                if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
-                    CORRECTS += 1
-                    Answers.FOURTH = FOURTH
-                if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A5:
-                    CORRECTS += 1   
-                    Answers.FIVE = FIFTH
+    if type_test == 'Developer' or type_test == 'Tester' or type_test == 'Analitix':
+        FIRST = request.form.getlist('FIRST')
+        SECOND = request.form.getlist('SECOND')
+        THIRD = request.form.getlist('THIRD')
+        FOURTH = request.form.getlist('FOURTH')
+        FIFTH = request.form.getlist('FIFTH') 
+        if type_test == 'Developer':
+            type = 1
+            if FIRST == DeveloperAnswer.CORRECT_ANSWER_D1:
+                CORRECTS += 1 
+                Answers.FIRST = FIRST
+            if SECOND == DeveloperAnswer.CORRECT_ANSWER_D2:
+                CORRECTS += 1
+                Answers.SECOND = SECOND
+            if THIRD == DeveloperAnswer.CORRECT_ANSWER_D3:
+                CORRECTS += 1
+                Answers.THIRD = THIRD
+            if FOURTH == DeveloperAnswer.CORRECT_ANSWER_D4:
+                CORRECTS += 1
+                Answers.FOURTH = FOURTH
+            if FIFTH == DeveloperAnswer.CORRECT_ANSWER_D5:
+                CORRECTS += 1     
+                Answers.FIVE = FIFTH
+        if type_test == 'Tester':
+            type = 2
+            if FIRST == QAAnswers.CORRECT_ANSWER_QA1:
+                CORRECTS += 1    
+                Answers.FIRST = FIRST
+            if SECOND == QAAnswers.CORRECT_ANSWER_QA2:
+                CORRECTS += 1
+                Answers.SECOND = SECOND
+            if THIRD == QAAnswers.CORRECT_ANSWER_QA3:
+                CORRECTS += 1
+                Answers.THIRD = THIRD
+            if FOURTH == QAAnswers.CORRECT_ANSWER_QA4:
+                CORRECTS += 1
+                Answers.FOURTH = FOURTH
+            if FIFTH == QAAnswers.CORRECT_ANSWER_QA5:
+                CORRECTS += 1 
+                Answers.FIVE = FIFTH
+        if type_test == 'Analitix':
+            type = 3
+            if FIRST == AnalitixAnswer.CORRECT_ANSWER_A1:
+                CORRECTS += 1    
+                Answers.FIRST = FIRST
+            if SECOND == AnalitixAnswer.CORRECT_ANSWER_A2:
+                CORRECTS += 1
+                Answers.SECOND = SECOND
+            if THIRD == AnalitixAnswer.CORRECT_ANSWER_A3:
+                CORRECTS += 1
+                Answers.THIRD = THIRD
+            if FOURTH == AnalitixAnswer.CORRECT_ANSWER_A4:
+                CORRECTS += 1
+                Answers.FOURTH = FOURTH
+            if FIFTH == AnalitixAnswer.CORRECT_ANSWER_A5:
+                CORRECTS += 1   
+                Answers.FIVE = FIFTH
 
-            if CORRECTS >= 4 :
-                type_test = type_test + 'SECOND'
-                TYPE_TEST.type_test = type_test
-                TYPE_TEST.OPEN_FORM = 0
-                if type_test == 'DeveloperSECOND':
-                    SecondTaskA[0] = DevelopersQuestions.DS1  
-                    SecondTaskA[1] = DevelopersQuestions.DS2    
-                    SecondTaskA[2] = DevelopersQuestions.DS3  
-                if type_test == 'TesterSECOND':
-                    SecondTaskA[0] = QAquestions.QS1  
-                    SecondTaskA[1] = QAquestions.QS2   
-                    SecondTaskA[2] = QAquestions.QS3
-                if type_test == 'AnalitixSECOND':
-                    SecondTaskA[0] = AnalitixQuestions.AS1 
-                    SecondTaskA[1] = AnalitixQuestions.AS2    
-                    SecondTaskA[2] = AnalitixQuestions.AS3          
-                return render_template('correct_answers.html', correct = CORRECTS, SecondTaskA = SecondTaskA)
-            else:
-                sixth_answer = ''
-                seventh_answer = ''
-                eighth_answer = ''
-                insert_data(True, Answers.name, Answers.surname, Answers.city, Answers.age)
-                insert_answers_bd(data, FIRST, SECOND, THIRD,
-                FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
-                TYPE_TEST.OPEN_FORM == 0
-                TYPE_TEST.type_test = 'None'
-                return render_template('correct_answers.html', correct = CORRECTS)
+        if CORRECTS >= 4 :
+            type_test = type_test + 'SECOND'
+            TYPE_TEST.type_test = type_test
+            if type_test == 'DeveloperSECOND':
+                SecondTaskA[0] = DevelopersQuestions.DS1  
+                SecondTaskA[1] = DevelopersQuestions.DS2    
+                SecondTaskA[2] = DevelopersQuestions.DS3  
+            if type_test == 'TesterSECOND':
+                SecondTaskA[0] = QAquestions.QS1  
+                SecondTaskA[1] = QAquestions.QS2   
+                SecondTaskA[2] = QAquestions.QS3
+            if type_test == 'AnalitixSECOND':
+                SecondTaskA[0] = AnalitixQuestions.AS1 
+                SecondTaskA[1] = AnalitixQuestions.AS2    
+                SecondTaskA[2] = AnalitixQuestions.AS3          
+            return render_template('correct_answers.html', correct = CORRECTS, SecondTaskA = SecondTaskA)
+        else:
+            sixth_answer = ''
+            seventh_answer = ''
+            eighth_answer = ''
+            insert_data(True, Answers.name, Answers.surname, Answers.city, Answers.age)
+            insert_answers_bd(data, FIRST, SECOND, THIRD,
+            FOURTH, FIFTH, sixth_answer, seventh_answer, eighth_answer)
+            TYPE_TEST.type_test = 'None'
+            return render_template('correct_answers.html', correct = CORRECTS)
 
     flash("Ошибка сервера! Попробуйте обновить страницу", category='error')    
     return render_template('index.html')            
