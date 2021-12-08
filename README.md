@@ -1,6 +1,13 @@
 # Online-testing-system
 A web app for holding online testing on theme "Interviewing future employees for a position in an IT company"
 
+# Link to the server
+https://flask-online-testing-system.herokuapp.com/
+
+# Команды для взаимодействия с Heroku
+* git push heroku main - запуск сервера
+* heroku logs - просмотр логов на сервере
+
 # Итоговый проект
 
 В рамках изучения курса в качестве итогового задания проводится разработка собственного проекта, в котором реализуется работа с широкой гаммой библиотек Python, библиотеками анализа данных, web – технологиями, практическая работа с WEB-API, знакомство с веб-фреймворком Django, работа с базами данных DB-API, системой контроля версий (git), навыки совместной работы в команде.
@@ -23,7 +30,7 @@ A web app for holding online testing on theme "Interviewing future employees for
 * Собеседование будущих сотрудников на должность в IT компанию.
 
 # Задачи:
-* ТЗ
+* Построение скелета
 * Проектирование БД
 * Развернуть сервер
 * Стилистика сайта
